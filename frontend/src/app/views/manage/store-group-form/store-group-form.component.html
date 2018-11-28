@@ -1,0 +1,141 @@
+<!--/.row-->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <i [ngClass]="!selected_store ? 'fa fa-plus-square': 'fa fa-edit'"></i><span *ngIf="selected_store">Editing
+        {{selected_store.name}} </span> <span *ngIf="!selected_store"> Adding Store Group  </span>
+        <div class="card-header-actions">
+          <!--<button type="button" class="card-header-action btn btn-link btn-setting"><i class="icon-settings"></i></button>-->
+          <button type="button" class="card-header-action btn btn-link btn-minimize"(click)="toggleCollapse()"><i class={{iconCollapse}}></i></button>
+          <button type="button" class="card-header-action btn btn-link btn-close" (click)="onCloseOperation()"><i class="icon-close"></i></button>
+        </div>
+      </div>
+      <div (collapsed)="collapsed($event)"
+           (expanded)="expanded($event)"
+           [collapse]="isCollapsed"
+           class="card-body">
+        <form  [formGroup]="store_form" (submit)="store_infos()" >
+          <div>
+            <img *ngIf="logo"  src="{{logo}}"  style="" class="pull-right" width="105"/>
+            <br class="clear"/>
+          </div>
+
+
+          <div class="row">
+
+
+            <div class="form-group col-sm-6">
+              <label class="col-form-label" >Logo</label>
+              <div class="controls">
+
+                <input type="file"  accept="images/*" class="form-control"
+                       (change)="fileUploaded($event)" placeholder="Provide Logo"
+                       [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                       formControlName="avatar" />
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-6">
+              <label class="col-form-label"> Name</label>
+              <div class="controls">
+
+                <input type="text" formControlName="name"  class="form-control" placeholder="Enter Store Name"
+                       [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <label class="col-form-label" >Contact Number</label>
+              <div class="controls">
+
+                <input type="text" formControlName="tel_number"  class="form-control" placeholder="Enter telephone number"
+                       [ngClass]="{ 'is-invalid': submitted && f.address.errors }"/>
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-6">
+              <label class="col-form-label" >Address</label>
+              <div class="controls">
+
+                <input class="form-control"  type="text"
+                       autocapitalize="off" autocomplete="off"  appGPlacesAutocomplete
+                       formControlName="address"
+                       (setAddress)="getAddressOnChange($event)"
+                       [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <label class="col-form-label" >Representative Name</label>
+              <div class="controls">
+
+                <input type="text" formControlName="store_representatives_name"  class="form-control" placeholder="Representative Name"
+                       [ngClass]="{ 'is-invalid': submitted && f.store_representatives_name.errors}"
+                />
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-6">
+              <label class="col-form-label" >Representative Surname</label>
+              <div class="controls">
+
+                <input type="text" formControlName="store_representatives_surname"  class="form-control" placeholder="Representative Surname"
+                       [ngClass]="{ 'is-invalid': submitted && f.store_representatives_name.errors}"/>
+
+
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+
+
+            <div class="form-group col-sm-6">
+              <label class="col-form-label" >Reprensative Email</label>
+              <div class="controls">
+
+                <input type="text" formControlName="store_representatives_email"  class="form-control" placeholder="Please enter an email"
+                       [ngClass]="{ 'is-invalid': submitted && f.store_representatives_email.errors}"/>
+
+
+              </div>
+            </div>
+
+            <div class="form-group col-sm-6">
+              <label class="col-form-label" ><br /></label>
+              <div class="controls">
+
+                <input class="form-control"  type="text"
+                      disabled>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="form-actions card-footer">
+            <div class="row pull-right clearfix">
+              <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save changes</button>
+              &nbsp; &nbsp; <button class="btn btn-danger" type="button" (click)="onCloseOperation()"><i class="fa fa-times-circle"></i> Cancel</button>
+
+            </div>
+            <br class="clear"/>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> <!--/.col-->
+</div><!--/.row-->

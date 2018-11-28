@@ -1,0 +1,128 @@
+<div class="app-body">
+  <main class="main d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6 mx-auto">
+
+          <div class="card mx-4">
+            <div class="card-body p-4">
+              <form [formGroup]="detailsForm" (submit)="complete_profile()" enctype="multipart/form-data">
+                <h1>Complete Your Profile</h1>
+                <p class="text-muted">Create your account</p>
+                <p *ngIf="msg.error.length > 0" class="alert alert-danger">{{msg.error}}</p>
+                <p  *ngIf="msg.success.length >0" class="alert alert-success">{{msg.success}}</p>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-user"></i></span>
+                  </div>
+                  <input   formControlName="name" type="text" class="form-control" placeholder="Name" autocomplete="name"
+                           [ngClass]="{ 'is-invalid': submitted && f.name.errors }">
+
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-user"></i></span>
+                  </div>
+                  <input  formControlName="surname" type="text" class="form-control" placeholder="Surname" autocomplete="surname" required
+                          [ngClass]="{ 'is-invalid': submitted && f.surname.errors }">
+                </div>
+
+
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-people"></i></span>
+                  </div>
+
+                  <select class="form-control" id="gender" formControlName="gender"
+                          [ngClass]="{ 'is-invalid': submitted && f.gender.errors }">
+                    <option value="" ng-reflect-value="" selected>Please select gender</option>
+                    <option value="male" ng-reflect-value="male" >Male</option>
+                    <option value="female" ng-reflect-value="male">Female</option>
+                  </select>
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-calendar"></i></span>
+                  </div>
+                  <input class="form-control" id="dob" formControlName="dob" placeholder="Date of birth" type="date">
+
+
+
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-phone"></i></span>
+                  </div>
+                  <input class="form-control" id="mobile" formControlName="mobile" placeholder="Mobile">
+
+
+
+                </div>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-directions"></i></span>
+                  </div>
+                  <input class="form-control"  placeholder="Address" type="text"
+                         autocapitalize="off" autocomplete="off"  appGPlacesAutocomplete
+                         formControlName="address"
+                         (setAddress)="getAddressOnChange($event)">
+
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-basket-loaded"></i></span>
+                  </div>
+                  <input class="form-control" id="business_name" formControlName="business_name" placeholder="Business Name" type="text">
+
+                </div>
+
+                <div class="input-group mb-3">
+
+
+                  <div class="form-check"  *ngFor="let c of detailsForm.controls['business_type']['controls']; let i=index">
+                    <input   class="form-check-input"   type="checkbox"
+                            [formControl]="c"
+                    >
+                    <label  class="form-check-label">{{business_category[i].name}}</label> &nbsp;
+                  </div>
+
+                </div>
+
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text"><i class="icon-badge"></i></span>
+                  </div>
+                  <input class="form-control" id="logo_file" formControlName="logo_file" placeholder="Business Name"
+                         type="file"  class="form-control" placeholder="Logo"
+                         [ngClass]="{ 'is-invalid': submitted && f.logo_file.errors }" (change)="fileUploaded($event)"
+                         accept="image/*">
+
+                </div>
+
+
+
+
+                <button  [disabled]="loading" type="submit" class="btn btn-block btn-success">Create Account</button>
+                <!--img *ngIf="loading" src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />-->
+              </form>
+            </div>
+            <!--<div class="card-footer p-4">
+              <div class="row">
+                <div class="col-6">
+                  <button class="btn btn-block btn-facebook" type="button"><span>facebook</span></button>
+                </div>
+                <div class="col-6">
+                  <button class="btn btn-block btn-twitter" type="button"><span>twitter</span></button>
+                </div>
+              </div>
+            </div>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

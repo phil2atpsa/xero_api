@@ -1,0 +1,264 @@
+<!--/.row-->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <i [ngClass]="!selected_store ? 'fa fa-plus-square': 'fa fa-edit'"></i><span *ngIf="selected_store">Editing
+        {{selected_store.parent_id}} {{selected_store.name}} - {{selected_store.shopping_center}}</span> <span *ngIf="!selected_store"> Adding Store </span>
+        <div class="card-header-actions">
+          <!--<button type="button" class="card-header-action btn btn-link btn-setting"><i class="icon-settings"></i></button>-->
+          <button type="button" class="card-header-action btn btn-link btn-minimize"(click)="toggleCollapse()"><i class={{iconCollapse}}></i></button>
+          <button type="button" class="card-header-action btn btn-link btn-close" (click)="onCloseOperation()"><i class="icon-close"></i></button>
+        </div>
+      </div>
+      <div (collapsed)="collapsed($event)"
+           (expanded)="expanded($event)"
+           [collapse]="isCollapsed"
+           class="card-body">
+        <form  [formGroup]="store_form" (submit)="store_infos()" >
+          <div>
+            <img *ngIf="logo"  src="{{logo}}"  style="" class="pull-right" width="105"/>
+            <br class="clear"/>
+          </div>
+
+          <h6>Store Informations</h6>
+          <hr />
+          <div class="row">
+
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Store Group</label>
+              <div class="controls">
+
+                <ng-select [items]="storeGroups"
+                           bindLabel="name"
+                           placeholder="Select Group"
+
+                           formControlName="parent_id"
+                           class="form-control"
+                           [ngClass]="{ 'is-invalid': submitted && f.parent_id.errors }">
+                </ng-select>
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Logo</label>
+              <div class="controls">
+
+                <input type="file"  accept="images/*" class="form-control"
+                       (change)="fileUploaded($event)" placeholder="Provide Logo"/>
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Store Name</label>
+              <div class="controls">
+
+                <input type="text" formControlName="name"  class="form-control" placeholder="Enter Store Name"
+                       [ngClass]="{ 'is-invalid': submitted && f.name.errors }"/>
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Shopping Center</label>
+              <div class="controls">
+
+                <input type="text" formControlName="shopping_center"  class="form-control" placeholder="Shopping Center"/>
+
+
+              </div>
+            </div>
+
+          </div>
+          <div class="row">
+
+
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Shop Number</label>
+              <div class="controls">
+
+                <input type="text" formControlName="shop_number"  class="form-control" placeholder="Shop Number"/>
+
+
+              </div>
+            </div>
+
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Address</label>
+              <div class="controls">
+
+                <input class="form-control"  type="text"
+                       autocapitalize="off" autocomplete="off"  appGPlacesAutocomplete
+                       formControlName="address"
+                       (setAddress)="getAddressOnChange($event)"
+                       [ngClass]="{ 'is-invalid': submitted && f.address.errors }">
+
+
+              </div>
+            </div>
+
+              <div class="form-group col-sm-3">
+                <label class="col-form-label" >Tel Number</label>
+                <div class="controls">
+                  <input type="text" formControlName="tel_number"  class="form-control" placeholder="Telephone Number"
+                         [ngClass]="{ 'is-invalid': submitted && f.tel_number.errors }"/>
+
+                </div>
+              </div>
+
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" ><br /></label>
+              <div class="controls">
+                <input type="text" class="form-control" placeholder="" disabled/>
+
+              </div>
+            </div>
+
+          </div>
+
+
+
+
+
+          <h6> Representative  </h6>
+          <hr />
+          <div class="row">
+
+            <div class="form-group col-sm-3">
+              <label class="col-form-label">Name</label>
+              <div class="controls">
+
+                <input type="text" formControlName="store_representatives_name"  class="form-control" placeholder="Please enter  name"
+                       [ngClass]="{ 'is-invalid': submitted && f.store_representatives_name.errors }"/>
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Surname</label>
+              <div class="controls">
+
+                <input type="text" formControlName="store_representatives_surname"  class="form-control" placeholder="Please enter  surname"
+                       [ngClass]="{ 'is-invalid': submitted && f.store_representatives_surname.errors }"/>
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Email</label>
+              <div class="controls">
+
+                <input type="email" formControlName="store_representatives_email"  class="form-control" placeholder="Please enter Email"
+                       [ngClass]="{ 'is-invalid': submitted && f.store_representatives_email.errors }"/>
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" > Mobile</label>
+              <div class="controls">
+                <input type="text" formControlName="store_representatives_cell_no"  class="form-control" placeholder="Enter Mobile"
+                       [ngClass]="{ 'is-invalid': submitted && f.store_representatives_cell_no.errors }"/>
+
+              </div>
+            </div>
+
+          </div>
+
+
+          <h6> Operating Times </h6>
+          <hr />
+
+          <div class="row">
+
+            <div class="form-group col-sm-3">
+              <label class="col-form-label">Weekdays -  Opening Time</label>
+              <input formControlName="operating_times_weekday_from" type="time" class="form-control"
+                     [ngClass]="{ 'is-invalid': submitted && f.operating_times_weekday_from.errors }">
+
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Weekdays - Closing Time</label>
+              <div class="controls">
+
+                <input formControlName="operating_times_weekday_to" type="time" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.operating_times_weekday_to.errors }">
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label">Saturday -  Opening Time</label>
+              <input formControlName="operating_times_saturday_from" type="time" class="form-control"
+                     [ngClass]="{ 'is-invalid': submitted && f.operating_times_saturday_from.errors }">
+
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Saturday - Closing Time</label>
+              <div class="controls">
+
+                <input formControlName="operating_times_saturday_to" type="time" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.operating_times_saturday_to.errors }">
+
+
+              </div>
+            </div>
+
+
+          </div>
+          <div class="row">
+
+            <div class="form-group col-sm-3">
+              <label class="col-form-label">Sunday -  Opening Time</label>
+              <input formControlName="operating_times_sunday_from" type="time" class="form-control"
+                     [ngClass]="{ 'is-invalid': submitted && f.operating_times_sunday_from.errors }">
+
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Sunday - Closing Time</label>
+              <div class="controls">
+
+                <input formControlName="operating_times_sunday_to" type="time" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.operating_times_sunday_to.errors }">
+
+
+              </div>
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label">Public Holiday -  Opening Time</label>
+              <input formControlName="operating_times_ph_from" type="time" class="form-control"
+                     [ngClass]="{ 'is-invalid': submitted && f.operating_times_ph_from.errors }">
+
+            </div>
+            <div class="form-group col-sm-3">
+              <label class="col-form-label" >Public Holiday - Closing Time</label>
+              <div class="controls">
+
+                <input formControlName="operating_times_ph_to" type="time" class="form-control"
+                       [ngClass]="{ 'is-invalid': submitted && f.operating_times_ph_to.errors }">
+
+
+              </div>
+            </div>
+
+
+          </div>
+
+
+
+          <div class="form-actions card-footer">
+            <div class="row pull-right clearfix">
+              <button type="submit" class="btn btn-primary"><i class="fa fa-dot-circle-o"></i> Save changes</button>
+              &nbsp; &nbsp; <button class="btn btn-danger" type="button" (click)="onCloseOperation()"><i class="fa fa-times-circle"></i> Cancel</button>
+
+            </div>
+            <br class="clear"/>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> <!--/.col-->
+</div><!--/.row-->

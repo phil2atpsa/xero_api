@@ -1,0 +1,60 @@
+// Here you can add other styles
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #333333;
+  border-radius: 50%;
+  width: 90px;
+  height: 90px;
+  animation: spin 2s linear infinite;
+  position: absolute;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+@import '~@angular/material/theming';
+@include mat-core();
+
+$app-dashboard-primary: mat-palette($mat-blue-grey);
+$app-dashboard-accent:  mat-palette($mat-pink, 500, 900, A100);
+$app-dashboard-warn:    mat-palette($mat-deep-orange);
+$app-dashboard-theme: mat-light-theme($app-dashboard-primary, $app-dashboard-accent, $app-dashboard-warn);
+@include angular-material-theme($app-dashboard-theme);
+
+
+.alternate-theme {
+  $alternate-primary: mat-palette($mat-light-blue);
+  $alternate-accent:  mat-palette($mat-yellow, 400);
+
+  $alternate-theme: mat-light-theme($alternate-primary, $alternate-accent);
+
+  @include angular-material-theme($alternate-theme);
+}
+.hide{
+  display:none;
+}
+.clear{
+  clear:both;
+}
+
+mat-footer-row mat-footer-cell{
+  justify-content: center;
+  font-style: italic;
+}
+
+@import "~@ng-select/ng-select/themes/default.theme.css";
+
+
+
+
