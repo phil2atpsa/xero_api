@@ -10,6 +10,8 @@ namespace App\Http\Controllers\Api;
 
 
 use App\Http\Controllers\Controller;
+use App\Services\InvoiceService;
+use App\Services\XeroService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use XeroPHP\Application\PrivateApplication;
@@ -22,13 +24,16 @@ class InvoiceController extends Controller
      * @var null|PrivateApplication
      */
     private $xero = null;
+    private $invoice_service;
 
     /**
      * InvoiceController constructor.
+     * @param XeroService $xeroService
      */
-    public function __construct()
+    public function __construct(XeroService $xeroService)
     {
-        $this->xero = new PrivateApplication(config('xero'));
+        $this->xero = $xeroService;
+        $this->invoice_service = new InvoiceService($this->xero->getApplication());
     }
 
     /**
@@ -37,8 +42,20 @@ class InvoiceController extends Controller
      */
     public function index() : \Illuminate\Http\JsonResponse
     {
-        $invoices = $this->xero->load('Accounting\\Invoice')->execute();
-        return response()->json($invoices->getArrayCopy(), 200);
+        $invoices = $this->xero
+                ->load(InvoiceService::MODEL)
+                ->where('Type ="ACCREC"')
+                ->execute()
+                ->getArrayCopy();
+        return response()->json( $invoices , 200);
+    }
+    
+    public function show($id) : \Illuminate\Http\JsonResponse
+    {
+      
+        return response()->json( $this->xero
+                ->loadByGUID(InvoiceService::MODEL, $id)
+               ->toStringArray() , 200);
     }
 
     /**
@@ -52,104 +69,24 @@ class InvoiceController extends Controller
 
         $post = $request->all();
         $post = $post['Invoice'];
-
         try {
-
-
-            if(preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}/', $id)) {
-                $contact = $this->xero->load('Accounting\\Contact')
-                    ->where('EmailAddress = "'.$id.'"')
-                    ->execute()
-                    ->first();
-            } else {
-                $contact = $this->xero->loadByGUID('Accounting\\Contact', $id);
-            }
-
-            if (!in_array($post['Type'], [Invoice::INVOICE_TYPE_ACCPAY, Invoice::INVOICE_TYPE_ACCREC])) {
-                throw  new \Exception("Invalid Invoice Type should
-                    be one of : ".Invoice::INVOICE_TYPE_ACCPAY."|".Invoice::INVOICE_TYPE_ACCREC);
-
-            }
-            $date = Carbon::createFromFormat("Y-m-d\TH:i:s", $post['Date']);
-
-            if ( $date === false) {
-                throw  new \Exception("Invalid Invoice Date format should be Y-m-d\TH:i:s");
-            }
-            $due_date = Carbon::createFromFormat("Y-m-d\TH:i:s", $post['DueDate']);
-            if ( $due_date === false) {
-                throw  new \Exception("Invalid Invoice DueDate format should be Y-m-d\TH:i:s");
-            }
-
-            if (!in_array($post['Status'], [Invoice::INVOICE_STATUS_AUTHORISED,
-                Invoice::INVOICE_STATUS_DELETED, Invoice::INVOICE_STATUS_DRAFT,
-                Invoice::INVOICE_STATUS_PAID, Invoice::INVOICE_STATUS_SUBMITTED, Invoice::INVOICE_STATUS_VOIDED  ])) {
-                throw  new \Exception("Invalid Invoice Status should
-                    be one of : ".Invoice::INVOICE_STATUS_AUTHORISED.",".Invoice::INVOICE_STATUS_DELETED.",".Invoice::INVOICE_STATUS_DRAFT.",
-                    ".Invoice::INVOICE_STATUS_PAID.",".Invoice::INVOICE_STATUS_SUBMITTED.",".Invoice::INVOICE_STATUS_VOIDED."");
-
-            }
-
-            $invoice = new Invoice($this->xero);
-            $invoice->setContact($contact);
-            $invoice->setType($post['Type']);
-            $invoice->setDate($date);
-            $invoice->setDueDate($due_date);
-
-            if(isset($post['InvoiceNumber']))
-                $invoice->setInvoiceNumber($post['InvoiceNumber']);
-
-
-            if(isset($post['Reference']))
-                $invoice->setReference($post['Reference']);
-
-            if(isset($post['CurrencyCode']))
-                $invoice->setCurrencyCode($post['CurrencyCode']);
-
-
-            $invoice->setStatus($post['Status']);
-
-            if(isset($post['LineAmountTypes']))
-                $invoice->setLineAmountTypes($post['LineAmountTypes']);
-
-            foreach($post['LineItems'] as $LineItems){
-                $lineItem = new LineItem($this->xero);
-                $lineItem->setQuantity($LineItems['Quantity']);
-                $lineItem->setDescription($LineItems['Description']);
-                $lineItem->setUnitAmount($LineItems['UnitAmount']);
-                if(isset($LineItems['TaxType']))
-                 $lineItem->setTaxType($LineItems['TaxType']);
-
-                if(isset($LineItems['TaxAmount']))
-                    $lineItem->setTaxAmount((float) $LineItems['TaxAmount']);
-
-                if(isset($LineItems['AccountCode']))
-                    $lineItem->setAccountCode( $LineItems['AccountCode']);
-
-                $invoice->addLineItem($lineItem);
-            }
-
-            $invoice = \simplexml_load_string($invoice->save()->getResponseBody());
-
-
-
-
             return response()->json([
                 'success'=> true,
                 'message'=> config('api_response.xero.success_on_create'),
-                'InvoiceID' => $invoice->Invoices->Invoice->InvoiceID
+                'InvoiceID' => $this->invoice_service->createInvoice($post, $id)
             ], 200);
 
-
-
-
-
-
-        } catch (\Exception  $ex){
-
+        } catch(\Exception $ex){
             return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
         }
 
 
+    }
+    /**
+     * @
+     */
+    public function contact_invoices(string $contactID) : \Illuminate\Http\JsonResponse{
+            return response()->json( $this->invoice_service->getClientsInvoices($contactID) , 200);
     }
 
 }

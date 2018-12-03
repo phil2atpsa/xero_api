@@ -9,14 +9,11 @@
 namespace App\Http\Controllers\Api;
 
 
+use App\Services\ContactService;
+use App\Services\InvoiceService;
 use Illuminate\Http\Request;
-use XeroPHP\Application\PrivateApplication;
 use  App\Http\Controllers\Controller;
-use XeroPHP\Models\Accounting\Contact;
-use XeroPHP\Models\Accounting\Address;
-use XeroPHP\Models\Accounting\Phone;
-use XeroPHP\Models\Accounting\Contact\ContactPerson;
-use XeroPHP\Remote\Exception\BadRequestException;
+use App\Services\XeroService;
 
 
 class ContactController extends Controller
@@ -26,15 +23,18 @@ class ContactController extends Controller
 
 
     protected $xero;
+    protected $contact_service;
 
 
-    public function __construct()
+    public function __construct(XeroService $xeroService)
     {
-        $this->xero = new PrivateApplication(config('xero'));
+        $this->xero = $xeroService;
+        $this->contact_service = new ContactService($this->xero->getApplication());
+
     }
 
     protected function getContactList(int $contactType) : array {
-        $contacts = $this->xero->load('Accounting\\Contact');
+        $contacts = $this->xero->load(ContactService::MODEL);
 
         switch($contactType){
             case config('enums.contact_type.customer'):
@@ -49,6 +49,7 @@ class ContactController extends Controller
 
         return $contacts->getArrayCopy();
     }
+
     public function index()
     {
         return response()->json($this->getContactList(config('enums.contact_type.all')), 200);
@@ -77,127 +78,18 @@ class ContactController extends Controller
     public function store(Request $request) :   \Illuminate\Http\JsonResponse
     {
         $post = $request->all();
+       // print_r($post); exit;
         $post = $post['Contact'];
+
         try {
-            $contact = new Contact($this->xero);
-            $contact->setName($post['Name']);
-
-            if (isset($post['ContactNumber']))
-                $contact->setContactNumber($post['ContactNumber']);
-
-            if (isset($post['ContactStatus']))
-                $contact->setContactStatus($post['ContactStatus']);
-
-            if (isset($post['DefaultCurrency']))
-                $contact->setDefaultCurrency($post['DefaultCurrency']);
-
-            if (isset($post['EmailAddress']))
-                $contact->setEmailAddress($post['EmailAddress']);
-
-            if (isset($post['BankAccountDetails']))
-                $contact->setBankAccountDetail($post['BankAccountDetails']);
-
-            if (isset($post['SkypeUserName']))
-                $contact->setSkypeUserName($post['SkypeUserName']);
-
-            if (isset($post['TaxNumber']))
-                $contact->setTaxNumber($post['TaxNumber']);
-
-            if (isset($post['AccountsReceivableTaxType']))
-                $contact->setAccountsReceivableTaxType($post['AccountsReceivableTaxType']);
-
-            if (isset($post['AccountsPayableTaxType']))
-                $contact->setAccountsPayableTaxType($post['AccountsPayableTaxType']);
-
-            if (isset($post['FirstName']))
-                $contact->setFirstName($post['FirstName']);
-
-            if (isset($post['LastName']))
-                $contact->setLastName($post['LastName']);
-
-            if (isset($post['Addresses'])) {
-                foreach ($post['Addresses'] as $addresses) {
-                    $address = new Address($this->xero);
-                    if (isset($addresses['AddressType']))
-                        $address->setAddressType($addresses['AddressType']);
-                    if (isset($addresses['AttentionTo']))
-                        $address->setAttentionTo($addresses['AttentionTo']);
-                    if (isset($addresses['AddressLine1']))
-                        $address->setAddressLine2($addresses['AddressLine2']);
-                    if (isset($addresses['AddressLine3']))
-                        $address->setAddressLine3($addresses['AddressLine3']);
-
-                    if (isset($addresses['AddressLine4']))
-                        $address->setAddressLine4($addresses['AddressLine4']);
-
-                    if (isset($addresses['City']))
-                        $address->setCity($addresses['City']);
-
-                    if (isset($addresses['Region']))
-                        $address->setRegion($addresses['Region']);
-
-                    if (isset($addresses['PostalCode']))
-                        $address->setPostalCode($addresses['PostalCode']);
-
-                    $address->save();
-                    $contact->addAddress($address);
-
-                }
-            }
-
-            if (isset($post['Phones'])) {
-                foreach ($post['Phones'] as $phones) {
-                    $phone = new Phone($this->xero);
-                    if (isset($phones['PhoneType']))
-                        $phone->setPhoneType($phones['PhoneType']);
-                    if (isset($phones['PhoneNumber']))
-                        $phone->setPhoneNumber($phones['PhoneNumber']);
-
-                    if (isset($phones['PhoneAreaCode']))
-                        $phone->setPhoneAreaCode($phones['PhoneAreaCode']);
-
-                    if (isset($phones['PhoneCountryCode']))
-                        $phone->setPhoneCountryCode($phones['PhoneCountryCode']);
-
-                    $phone->save();
-                    $contact->addPhone($phone);
-
-                }
-            }
-
-
-             if (isset($post['ContactPersons'])) {
-                $contactPerson = $post['ContactPersons']['ContactPerson'] ?? $post['ContactPersons']['ContactPerson'];
-                if( $contactPerson) {
-                    $contact_person = new ContactPerson($this->xero);
-
-                    if(isset($contactPerson['FirstName']))
-                        $contact_person->setFirstName($contactPerson['FirstName']);
-                    if(isset($contactPerson['LastName']))
-                        $contact_person->setLastName($contactPerson['LastName']);
-                    if(isset($contactPerson['EmailAddress']))
-                        $contact_person->setEmailAddress($contactPerson['EmailAddress']);
-
-                    if(isset($contactPerson['IncludeInEmails']))
-                        $contact_person->setIncludeInEmail($contactPerson['IncludeInEmails']);
-
-                    $contact_person->save();
-
-                    $contact->addContactPerson($contact_person);
-
-                }
-             }
-
-
-             $contact = \simplexml_load_string($contact->save()->getResponseBody());
-
             return response()->json([
-                    'success'=> true,
-                    'message'=> config('api_response.xero.success_on_create'),
-                    'ContactID' => $contact->Contacts->Contact->ContactID
+                'success'=> true,
+                'message'=> config('api_response.xero.success_on_create'),
+                'ContactID' =>  $this->contact_service->create($post)
             ], 200);
-        } catch(\Exception  $ex){
 
+
+        } catch(\Exception $ex){
             return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
         }
     }
@@ -224,127 +116,17 @@ class ContactController extends Controller
     {
         $post = $request->all();
         $post = $post['Contact'];
+        $post = $request->all();
+        $post = $post['Contact'];
         try {
-            $contact = new Contact($this->xero);
-            $contact->setName($post['Name']);
-            $contact->setContactID($id);
-
-            if (isset($post['ContactNumber']))
-                $contact->setContactNumber($post['ContactNumber']);
-
-            if (isset($post['ContactStatus']))
-                $contact->setContactStatus($post['ContactStatus']);
-
-            if (isset($post['DefaultCurrency']))
-                $contact->setDefaultCurrency($post['DefaultCurrency']);
-
-            if (isset($post['EmailAddress']))
-                $contact->setEmailAddress($post['EmailAddress']);
-
-            if (isset($post['BankAccountDetails']))
-                $contact->setBankAccountDetail($post['BankAccountDetails']);
-
-            if (isset($post['SkypeUserName']))
-                $contact->setSkypeUserName($post['SkypeUserName']);
-
-            if (isset($post['TaxNumber']))
-                $contact->setTaxNumber($post['TaxNumber']);
-
-            if (isset($post['AccountsReceivableTaxType']))
-                $contact->setAccountsReceivableTaxType($post['AccountsReceivableTaxType']);
-
-            if (isset($post['AccountsPayableTaxType']))
-                $contact->setAccountsPayableTaxType($post['AccountsPayableTaxType']);
-
-            if (isset($post['FirstName']))
-                $contact->setFirstName($post['FirstName']);
-
-            if (isset($post['LastName']))
-                $contact->setLastName($post['LastName']);
-
-            if (isset($post['Addresses'])) {
-                foreach ($post['Addresses'] as $addresses) {
-                    $address = new Address($this->xero);
-                    if (isset($addresses['AddressType']))
-                        $address->setAddressType($addresses['AddressType']);
-                    if (isset($addresses['AttentionTo']))
-                        $address->setAttentionTo($addresses['AttentionTo']);
-                    if (isset($addresses['AddressLine1']))
-                        $address->setAddressLine2($addresses['AddressLine2']);
-                    if (isset($addresses['AddressLine3']))
-                        $address->setAddressLine3($addresses['AddressLine3']);
-
-                    if (isset($addresses['AddressLine4']))
-                        $address->setAddressLine4($addresses['AddressLine4']);
-
-                    if (isset($addresses['City']))
-                        $address->setCity($addresses['City']);
-
-                    if (isset($addresses['Region']))
-                        $address->setRegion($addresses['Region']);
-
-                    if (isset($addresses['PostalCode']))
-                        $address->setPostalCode($addresses['PostalCode']);
-
-                    $address->save();
-                    $contact->addAddress($address);
-
-                }
-            }
-
-            if (isset($post['Phones'])) {
-                foreach ($post['Phones'] as $phones) {
-                    $phone = new Phone($this->xero);
-                    if (isset($phones['PhoneType']))
-                        $phone->setPhoneType($phones['PhoneType']);
-                    if (isset($phones['PhoneNumber']))
-                        $phone->setPhoneNumber($phones['PhoneNumber']);
-
-                    if (isset($phones['PhoneAreaCode']))
-                        $phone->setPhoneAreaCode($phones['PhoneAreaCode']);
-
-                    if (isset($phones['PhoneCountryCode']))
-                        $phone->setPhoneCountryCode($phones['PhoneCountryCode']);
-
-                    $phone->save();
-                    $contact->addPhone($phone);
-
-                }
-            }
-
-
-            if (isset($post['ContactPersons'])) {
-                $contactPerson = $post['ContactPersons']['ContactPerson'] ?? $post['ContactPersons']['ContactPerson'];
-                if( $contactPerson) {
-                    $contact_person = new ContactPerson($this->xero);
-
-                    if(isset($contactPerson['FirstName']))
-                        $contact_person->setFirstName($contactPerson['FirstName']);
-                    if(isset($contactPerson['LastName']))
-                        $contact_person->setLastName($contactPerson['LastName']);
-                    if(isset($contactPerson['EmailAddress']))
-                        $contact_person->setEmailAddress($contactPerson['EmailAddress']);
-
-                    if(isset($contactPerson['IncludeInEmails']))
-                        $contact_person->setIncludeInEmail($contactPerson['IncludeInEmails']);
-
-                    $contact_person->save();
-
-                    $contact->addContactPerson($contact_person);
-
-                }
-            }
-
-
-            $contact = \simplexml_load_string($contact->save()->getResponseBody());
-
             return response()->json([
                 'success'=> true,
-                'message'=> config('api_response.xero.success_on_update'),
-                'ContactID' => $contact->Contacts->Contact->ContactID
+                'message'=> config('api_response.xero.success_on_create'),
+                'ContactID' =>  $this->contact_service->create($post, $id)
             ], 200);
-        } catch( \Exception  $ex){
 
+
+        } catch(\Exception $ex){
             return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
         }
 
@@ -361,25 +143,72 @@ class ContactController extends Controller
 
     }
 
-
-
-
-
-
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return  \Illuminate\Http\JsonResponse
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \XeroPHP\Exception
+     * @throws \XeroPHP\Remote\Exception\NotFoundException
      */
     public function show($id) :  \Illuminate\Http\JsonResponse
     {
 
-        $contact = $this->xero->loadByGUID("Accounting\\Contact", $id);
+        $contact = $this->xero->loadByGUID(ContactService::MODEL, $id);
 
         return response()->json( $contact->toStringArray(), 200);
 
     }
+
+
+    public function contact_infos()
+    {
+        try {
+        $infos = [];
+
+        $contacts = $this->xero->load('Accounting\\Contact');
+        $contacts = $contacts->execute();
+        $contacts = $contacts->getArrayCopy();
+
+       // $infos['id'] =
+        foreach($contacts as $contact){
+            $info =[];
+            $info['id'] = $contact['ContactID'];
+            $info['name'] = $contact['Name'];
+            $info['status'] = $contact['ContactStatus'];
+            $info['email'] = $contact['EmailAddress'];
+            $info['skype_user'] =  $contact['SkypeUserName'] ?? null;
+            $info['iscustomer'] = $contact['IsCustomer'];
+            $info['issupplier'] = $contact['IsSupplier'];
+
+            foreach($contact['Addresses'] as $address) {
+                if($address['AddressType'] == 'STREET'){
+                    $info['city'] = $address['City'] ??  $address['City'];
+                    $info['region'] = $address['Region'] ??  $address['Region'];
+                    $info['postal_code'] = $address['PostalCode'] ??  $address['PostalCode'];
+                    $info['country'] = $address['Country'] ??  $address['Country'];
+                }
+            }
+
+
+            array_push($infos, $info);
+        }
+
+        array_walk($infos, [$this, 'pushInvoice']);
+
+
+        return response()->json( $infos, 200);
+        } catch(\Exception $ex){
+            return response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
+        }
+    }
+
+    private function  pushInvoice(&$info, $key){
+        $invoice_service = new InvoiceService($this->xero->getApplication());
+       // $info['payable'] = $invoice_service->getAmountPayableTo($info['id']);
+        $info['due'] = $invoice_service->getAmountDueBy($info['id']);
+    }
+
+
+
 
 
 

@@ -1,0 +1,143 @@
+<form [formGroup]="invoice_form" (submit)="save_invoice()">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-lg-10"> 
+                <h4>
+                    <ng-select [items]="contacts"
+                        bindLabel="Name"
+                        placeholder="Select Contact"
+                        formControlName="contact"
+                        (change)="onContactChange()"
+                        
+                        [ngClass]="{ 'is-invalid': submitted && f.contact.errors }">
+                    </ng-select>
+                </h4>
+            </div>
+            <div class="col-lg-2">
+                <button type="button" class="btn btn-dark" (click)="addItem()"><i class="fa fa-plus-square-o"></i> Add New Line Item</button>
+            </div>
+
+            <div class='col-lg-12'>
+                <div class="card">
+
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Due Date <br/>
+                                        <input type="date" class="form-control"
+                                               formControlName="duedate"
+                                               [ngClass]="{ 'is-invalid': submitted && f.duedate.errors }"/>
+                                    </th>
+                                    
+                                    <th>
+                                        Invoice Number <br />
+                                         <input type="text" class="form-control" 
+                                                formControlName="invoice_number"
+                                                [ngClass]="{ 'is-invalid': submitted && f.invoice_number.errors }"/>
+                                    </th>
+                                     
+                                     <th>
+                                         Reference Number <br />
+                                         <input type="text" class="form-control" 
+                                                formControlName="ref_number"
+                                                [ngClass]="{ 'is-invalid': submitted && f.ref_number.errors }"/>
+                                     </th>
+                                      <th>
+                                         Date <br />
+                                         <input type="date" class="form-control"  readonly=""
+                                                 formControlName="date"
+                                                 [ngClass]="{ 'is-invalid': submitted && f.date.errors }"/>
+                                     </th>
+                                     
+                                </tr>
+                            </thead>
+                        </table>
+
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Description
+                                    </th>
+                                    <th>
+                                        Quantity
+                                    </th>
+                                    <th>
+                                        UnitAmount
+                                    </th>
+                                    <th>
+                                        TaxAmount
+                                    </th>
+                                    <th>
+                                        LineAmount
+                                    </th>
+                                    <th>
+
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr  formArrayName="line_items" *ngFor="let item of invoice_form.controls['line_items']['controls']; let i = index;">
+                                     <td  [formGroupName]="i"> <input formControlName="description" type="text" class="form-control" /></td>
+                                    <td [formGroupName]="i"><input formControlName="quantity" type="number" step="1" min="0" class="form-control" (keyup)="makeLine(i)" /></td>
+                                    <td [formGroupName]="i"> <input formControlName="unitAmount" type="number" step="any" min="0"  class="form-control" (keyup)="makeLine(i)" /></td>
+                                    <td  [formGroupName]="i"><input formControlName="lineTax" type="text" class="form-control" readonly /></td>
+                                    <td [formGroupName]="i"><input formControlName="lineAmount" type="text" class="form-control" readonly /></td>
+                                    <td > <button class="btn btn-success" type="button" (click)="removeItem(i)"><i class="fa fa-minus-square-o"></i> </button> </td>
+                                </tr>
+
+
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-clear table-borderless" *ngIf="subtotal!=0">
+                                    <td colspan="4"></td>
+                                    <td> Subtotal</td>
+                                    <td>{{subtotal}}</td>
+                                </tr>
+                                <tr class="table-clear table-borderless"  *ngIf="total_tax!=0">
+                                    <td colspan="4"></td>
+                                    <td> Total Tax</td>
+                                    <td>{{total_tax}}</td>
+                                </tr>
+
+                                <tr class="table-clear table-borderless" *ngIf="total!=0">
+                                    <td colspan="4"></td>
+                                    <td> <b>Total </b> </td>
+                                    <td><b>{{total}}</b></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <table class="table table-striped"  *ngIf="amount_due!=0">
+                            <thead>
+                                <tr>
+
+                                    <th colspan="4">
+
+                                    </th>
+                                    <th>
+                            <h1 class="pull-right">Amount Due</h1>
+                            </th>
+                            <th>
+                            <h1 class="pull-right">{{amount_due}}</h1>
+                            </th>
+
+                            </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                    <div class="card-footer">
+                        &nbsp;  &nbsp;<button type="submit" class="btn btn-success pull-right" [disabled]="amount_due==0 && !loading"> <i class="fa fa-dot-circle-o"></i> Submit Invoice</button>
+                        &nbsp;  &nbsp;<button type='button' (click)="save_draft()"   class="btn btn-dark pull-right " style="margin-right:12px" [disabled]="amount_due==0 && !loading"> <i class="fa fa-dot-circle-o"></i> Save as Draft</button> &nbsp;
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>
+

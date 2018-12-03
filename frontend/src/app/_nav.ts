@@ -10,10 +10,6 @@ export const navItems = [
     }
   },
   {
-    title: true,
-    name: 'Functions'
-  },
-  {
     name: 'Settings',
     url: '/settings',
     icon: 'icon-settings',
@@ -26,10 +22,10 @@ export const navItems = [
       ]
   },
   {
-    name: 'Manage',
-    url: '/manage',
-    icon: 'icon-layers',
-    children: [
+    name: 'Contacts',
+    url: '/contacts',
+    icon: 'icon-people',
+   /* children: [
       {
         name: 'Store Groups',
         url: '/manage/store-group',
@@ -40,9 +36,43 @@ export const navItems = [
         url: '/manage/stores',
         icon: 'icon-basket icons'
       }
+    ]*/
+  },
+  {
+    name: 'Business',
+    url: '/business',
+    icon: 'icon-briefcase',
+    children: [
+      {
+        name: 'Invoices',
+        url: '/business/invoices',
+        icon: 'icon-notebook'
+      }
     ]
   },
   {
+    name: 'Accounting',
+    url: '/accounting',
+    icon: 'icon-wallet',
+    children: [
+    {
+        name: 'Payments',
+        url: '/accounting/payments',
+        icon: 'icon-credit-card'
+      },
+     {
+        name: 'Accounts',
+        url: '/accounting/accounts',
+        icon: 'icon-bag'
+      },
+      {
+        name: 'Transactions',
+        url: '/accounting/transactions',
+        icon: 'icon-list'
+      }
+    ]
+  },
+ /* {
     name: 'Promotions',
     url: '/promotions',
     icon: 'icon-list icons',
@@ -63,7 +93,7 @@ export const navItems = [
     name: 'Banners',
     url: '/banners',
     icon: 'icon-flag icons',
-  },
+  },*/
   /*{
     title: true,
     name: 'Components'

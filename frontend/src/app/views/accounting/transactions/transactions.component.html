@@ -1,0 +1,101 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div  class='col-lg-12' >
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-align-justify"></i> Accounts
+                    <div class="row pull-right">
+                        <div class="col-md-12">
+                            <mat-form-field class="search-form-field" floatLabel="never">
+                                <input matInput [(ngModel)]='searchKey' autocomplete="off" placeholder="Search" (keyup)="applyFilter()"  class="form-control" />
+                            </mat-form-field>
+                            &nbsp; &nbsp;
+                            <button class="btn btn-light" matSuffix  aria-label="Clear" *ngIf="searchKey" (click)="onSearchClear()" >
+                                <i class="fa fa-times-circle"></i>
+                            </button>
+                         
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <!---->
+                    <div class="mat-elevation-z8">
+                        <mat-paginator [pageSizeOptions]="[5,10,25,50,100]" [pageSize]="25" showFirstLastButtons></mat-paginator>
+                        <mat-table [dataSource]="list" matSort>
+
+
+                            <ng-container matColumnDef="Type">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Type</mat-header-cell>
+                                <mat-cell *matCellDef="let item"> {{item.Type}}  </mat-cell>
+
+                            </ng-container>
+
+                            <ng-container matColumnDef="Contact">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Contact</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.Contact.Name}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="BankCode">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>BankAccount Code</mat-header-cell>
+                                <mat-cell *matCellDef="let item">{{item.BankAccount.Code}}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="Status">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    <span class="badge badge-primary" *ngIf="item.Status=='ACTIVE'">{{item.Status}}</span>
+                                    <span class="badge badge-danger"  *ngIf="item.Status=='ARCHIVED'">{{item.Status}}</span>
+                                </mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="Date">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
+
+                                <mat-cell *matCellDef="let item" class="center-block">{{item.Date}}</mat-cell>
+                            </ng-container>
+                            <ng-container matColumnDef="Reference">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Reference</mat-header-cell>
+
+                                <mat-cell *matCellDef="let item" class="center-block">{{item.Reference}}</mat-cell>
+                            </ng-container>
+                             <ng-container matColumnDef="Total">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Total</mat-header-cell>
+
+                                <mat-cell *matCellDef="let item" class="center-block">{{item.Total}}</mat-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="loading">
+                                <mat-footer-cell *matFooterCellDef colspan="7">
+                                   <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                </mat-footer-cell>
+                            </ng-container>
+
+                            <ng-container matColumnDef="noData">
+                                <mat-footer-cell *matFooterCellDef colspan="7">
+                                    No Contact Found in the system
+                                </mat-footer-cell>
+                            </ng-container>
+
+
+                            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                            <mat-row *matRowDef="let row; columns:displayedColumns"></mat-row>
+                            <mat-footer-row *matFooterRowDef="['loading']" [ngClass]="{'hide':list!=null}"></mat-footer-row>
+                            <mat-footer-row *matFooterRowDef="['noData']" [ngClass]="{'hide':!(list!=null && list.data.length === 0)}"></mat-footer-row>
+
+                        </mat-table>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</div>

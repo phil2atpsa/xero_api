@@ -1,0 +1,198 @@
+<!--/.row-->
+<div class="row">
+  <div class="col-lg-12">
+    <div class="card">
+      <div class="card-header">
+        <i [ngClass]="!selected_contact ? 'fa fa-plus-square': 'fa fa-edit'"></i><span *ngIf="selected_contact">Editing
+        {{selected_contact.name}} </span> <span *ngIf="!selected_contact"> Adding Contact  </span>
+        <div class="card-header-actions">
+
+        </div>
+      </div>
+      <div class="card-body">
+        <form  [formGroup]="contact_form" (submit)="store_contact()" >
+
+
+          <div class="col-xs-12 rounded border">
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-8">
+                <h2>  <i class="icon icon-info"></i> Contact Informations </h2>
+                <hr />
+              </div>
+              <div class="form-group col-sm-1"></div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-6 col-sm-offset-3">
+                <label class="col-form-label" >Name</label>
+                <div class="controls">
+
+                  <input type="text" formControlName="name"
+                         class="form-control" placeholder=""
+                         [ngClass]="{ 'is-invalid': submitted && f.name.errors}"/>
+
+
+
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-6 col-sm-offset-3">
+                <label class="col-form-label" >Email Address</label>
+                <div class="controls">
+
+                  <input type="text" formControlName="email"
+                         class="form-control" placeholder=""
+                         [ngClass]="{ 'is-invalid': submitted && f.email.errors}"/>
+
+
+
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-6 col-sm-offset-3">
+                <label class="col-form-label" >Contact Person</label>
+                <div class="row">
+                  <div class="form-group col-sm-6">
+                    <input class="form-control col-sm-offset-0" placeholder="First Name"
+                           formControlName="contact_person_first_name"
+                    >
+                  </div>
+                  <div class="form-group col-sm-6">
+                    <input class="form-control col-sm-offset-0" placeholder="Last Name"
+                           formControlName="contact_person_last_name">
+                  </div>
+
+                </div>
+              </div>
+              <div class="form-group col-sm-3"></div>
+            </div>
+
+            <div class="row">
+            <div class="form-group col-sm-3"></div>
+            <div class="form-group col-sm-6 col-sm-offset-3">
+              <label class="col-form-label" >Phone</label>
+              <div class="row">
+                <div class="form-group col-sm-4 ">
+                    <input class="form-control col-sm-offset-0" placeholder="Country"
+                           formControlName="phone_country_code">
+                </div>
+                <div class="form-group col-sm-4 ">
+                  <input class="form-control col-sm-offset-0" placeholder="Area"
+                         formControlName="phone_area_code">
+                </div>
+                <div class="form-group col-sm-4">
+                  <input class="form-control col-sm-offset-0" placeholder="Number"
+                         formControlName="phone_number">
+                </div>
+              </div>
+            </div>
+            <div class="form-group col-sm-3"></div>
+            </div>
+
+
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-6 col-sm-offset-3">
+                <label class="col-form-label" >Fax</label>
+                <div class="row">
+                  <div class="form-group col-sm-4 ">
+                    <input class="form-control col-sm-offset-0" placeholder="Country"
+                           formControlName="fax_country_code">
+                  </div>
+                  <div class="form-group col-sm-4 ">
+                    <input class="form-control col-sm-offset-0" placeholder="Area"
+                           formControlName="fax_area_code"
+                    >
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <input class="form-control col-sm-offset-0" placeholder="Number"
+                           formControlName="fax_number">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-sm-3"></div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-6 col-sm-offset-3">
+                <label class="col-form-label" >Mobile</label>
+                <div class="row">
+                  <div class="form-group col-sm-4 ">
+                    <input class="form-control col-sm-offset-0" placeholder="Country"
+                           formControlName="mobile_country_code">
+                  </div>
+                  <div class="form-group col-sm-4 ">
+                    <input class="form-control col-sm-offset-0" placeholder="Area"
+                           formControlName="mobile_area_code">
+                  </div>
+                  <div class="form-group col-sm-4">
+                    <input class="form-control col-sm-offset-0" placeholder="Number"
+                           formControlName="mobile_number">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group col-sm-3"></div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-6 col-sm-offset-3">
+                <label class="col-form-label" >Skype Name/Number</label>
+                <div class="controls">
+
+                  <input type="text" formControlName="skype_name"
+                         class="form-control" placeholder=""
+                        />
+
+
+
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="form-group col-sm-3"></div>
+              <div class="form-group col-sm-6 col-sm-offset-3">
+                <label class="col-form-label" >Street Address</label>
+                <div class="controls">
+
+                  <input type="text"
+                         class="form-control" placeholder=""
+                         autocapitalize="off" autocomplete="off"  appGPlacesAutocomplete
+                         formControlName="street_address"
+                         (setAddress)="getAddressOnChange($event)"
+                  />
+
+
+
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+          <br />
+
+          <div class="form-actions card-footer">
+            <div class="row pull-right clearfix">
+              <button type="submit" class="btn btn-primary" [disabled]="loading == true"><i class="fa fa-dot-circle-o"></i> Save changes</button>
+
+
+            </div>
+            <br class="clear"/>
+
+          </div>
+        </form>
+      </div>
+    </div>
+  </div> <!--/.col-->
+</div><!--/.row-->

@@ -23,7 +23,6 @@ import { P500Component } from './views/error/500.component';
 import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { LogoutComponent } from './views/login/logout.component';
-import { UserDetailsComponent } from './views/user-details/user-details.component';
 import { ForgotPasswordComponent } from './views/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './views/forgot-password/reset-password.component';
 import {MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableModule} from '@angular/material';
@@ -61,9 +60,6 @@ import {SharedModule} from './shared/shared.module';
 
 
 
-
-
-
 @NgModule({
   imports: [
     BrowserModule,
@@ -97,9 +93,10 @@ import {SharedModule} from './shared/shared.module';
     LoginComponent,
     RegisterComponent,
     LogoutComponent,
-    UserDetailsComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+
+    
   ],
   providers: [{
     provide: LocationStrategy,

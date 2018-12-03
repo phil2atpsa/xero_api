@@ -56,7 +56,7 @@ class RouteServiceProvider extends ServiceProvider
         $router->group([
             'namespace' => $this->namespace, 'middleware' => 'web',
         ], function ($router) {
-            require app_path('Http/routes.php');
+            require base_path('routes/web.php');
         });
     }
 
@@ -72,7 +72,7 @@ class RouteServiceProvider extends ServiceProvider
     {
 
         $router->group([
-            'namespace' => $this->namespace, 'middleware' => 'api', 'prefix' => 'v1'
+            'namespace' => $this->namespace, 'middleware' => 'api', 'prefix' => 'api/v1'
         ], function ($router) {
             require base_path('routes/api.php');
         });

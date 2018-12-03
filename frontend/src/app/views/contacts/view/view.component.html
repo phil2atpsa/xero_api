@@ -1,0 +1,102 @@
+<!--/.row-->
+<div class="row">
+    <div class="col-lg-9">
+
+
+        <div class="col-md-12">
+            <button mat-raised-button  class="btn btn-success pull-right" (click)="create_invoice()">
+                <i class="fa fa-plus-circle"></i> New Invoice
+            </button>
+            <h2> <i class='icon icon-layers'></i> {{contact.Name}}</h2>      
+        </div>
+        <hr />
+        <div class="card" [ngClass]="{'hide':!(invoices!=null && invoices.length === 0) }">
+            <div class="card-header"></div> 
+            <div class="card-body">There is no invoice for {{contact.Name}}</div>
+        </div>
+        <div class="card" *ngFor="let invoice of invoices">
+             <div class="card-header">
+                <span *ngIf="invoice.Type == 'ACCREC'">  <i class="fa fa-align-justify"></i>  {{invoice.InvoiceNumber}} </span>
+                <span *ngIf="invoice.Type == 'ACCPAY'"> Payable  </span>
+                <div class="card-header-actions">
+
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Number</th>
+                            <th>Reference</th>
+                            <th>Date</th>
+                            <th>Date Due</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><i class='fa fa-file'></i> Invoice {{invoice.Status|titlecase }}</td>
+                            <td><a href='javascript:void(0)' (click)="onViewInvoice(invoice.InvoiceID)">{{invoice.InvoiceNumber}}</a></td>
+                            <td>{{invoice.Reference}}</td>
+                            <td>{{invoice.Date}}</td>
+                            <td>{{invoice.DueDate}}</td>
+
+
+                            <td>
+                                <span class="badge badge-success" *ngIf="invoice.Status == 'PAID'">{{invoice.Status}} </span>
+                                <span class="badge badge-secondary" *ngIf="invoice.Status == 'DRAFT'">{{invoice.Status}} </span>
+                                <span class="badge badge-primary" *ngIf="invoice.Status == 'AUTHORISED'">{{invoice.Status}} </span>
+                                <span class="badge badge-dark" *ngIf="invoice.Status == 'SUBMITTED'">{{invoice.Status}} </span>
+
+                                <span class="badge badge-danger" *ngIf="invoice.Status == 'DELETED'">{{invoice.Status}} </span>
+                                <span class="badge badge-warning" *ngIf="invoice.Status == 'VOIDED'">{{invoice.Status}} </span>
+
+                            </td>
+                            <td>{{invoice.Total}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div> <!--/.col-->
+    <div class="col-lg-3">
+        <div class="card">
+            <div class="card-header">
+                <i class="fa fa-align-justify"></i> Contact Informations
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <tr>
+                        <td><i class='icon icon-layers'></i>  {{contact.Name}}</td>
+                    </tr>
+                    <tr>
+                        <td><i class='icon icon-people' *ngIf="(contact.FirstName && contact.LastName)"></i>  
+                            {{contact.FirstName}}  {{contact.LastName}}</td>
+                    </tr>
+                    <tr>
+                        <td><i class='icon icon-book-open' *ngIf="contact.EmailAddress"></i>  
+                            {{contact.EmailAddress}} </td>
+                    </tr>
+                    <tr >
+                        <td>
+                            <div *ngFor="let address of contact.Addresses">
+                               <div *ngIf="address.addressType==='STREET'">
+                                   <div>  *ngIf="address.AddressLine1"> {{address.AddressLine1}}</div>
+                                <div *ngIf="address.City"> {{address.City}}</div>
+                                  <div *ngIf="address.Region">{{address.Region}}</div>
+                                  <div *ngIf="address.Country">{{address.Country}}</div>
+                                </div>
+                            </div>
+
+                        </td>
+                    </tr>
+
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div><!--/.row-->

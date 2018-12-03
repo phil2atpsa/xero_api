@@ -22,9 +22,14 @@ Route::group(['middleware' => 'api'], function() {
     Route::get('clients', 'Api\ClientsController@index');
     Route::get('suppliers', 'Api\SuppliersController@index');
     Route::resource('contacts', 'Api\ContactController', ['only' => ['index', 'show', 'store', 'update']]);
+    Route::get('contact/infos', 'Api\ContactController@contact_infos');
     Route::get('invoices', 'Api\InvoiceController@index');
+    Route::get('invoices/{id}', 'Api\InvoiceController@show');
     Route::post('invoice/{id}', 'Api\InvoiceController@create_invoice');
+    Route::get('invoice/{id}', 'Api\InvoiceController@contact_invoices');
     Route::resource('accounts', 'Api\AccountController', ['only' => ['index', 'show', 'store', 'update']]);
+    Route::get('account-types', 'Api\AccountController@account_types');
+    Route::get('account-classes', 'Api\AccountController@account_classes');
     Route::resource('bank-transfers', 'Api\BankTransferController', ['only' => ['index', 'show', 'store']]);
     Route::resource('bank-transactions', 'Api\BankTransactionsController', ['only' => ['index', 'show', 'store', 'update']]);
 });

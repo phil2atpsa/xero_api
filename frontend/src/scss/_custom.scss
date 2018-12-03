@@ -47,6 +47,9 @@ $app-dashboard-theme: mat-light-theme($app-dashboard-primary, $app-dashboard-acc
 .clear{
   clear:both;
 }
+.col-form-label{
+  text-align:right;
+}
 
 mat-footer-row mat-footer-cell{
   justify-content: center;
@@ -54,6 +57,7 @@ mat-footer-row mat-footer-cell{
 }
 
 @import "~@ng-select/ng-select/themes/default.theme.css";
+
 
 
 

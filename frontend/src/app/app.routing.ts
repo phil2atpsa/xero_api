@@ -10,7 +10,6 @@ import { LoginComponent } from './views/login/login.component';
 import { LogoutComponent } from './views/login/logout.component';
 import { RegisterComponent } from './views/register/register.component';
 import {AuthGuardService} from './services/authguard.service';
-import {UserDetailsComponent} from './views/user-details/user-details.component';
 import {ForgotPasswordComponent} from './views/forgot-password/forgot-password.component';
 import {ResetPasswordComponent} from './views/forgot-password/reset-password.component';
 
@@ -46,13 +45,6 @@ export const routes: Routes = [
     component: LogoutComponent,
   },
   {
-    path: 'user_details',
-    component: UserDetailsComponent,
-    data: {
-      title: 'Complete Your Profile'
-    }
-  },
-  {
     path: 'forgot_password',
     component: ForgotPasswordComponent,
     data: {
@@ -77,14 +69,22 @@ export const routes: Routes = [
   {
     path: '',
     component: DefaultLayoutComponent,
-    canActivate: [AuthGuardService],
+    /*canActivate: [AuthGuardService],*/
     data: {
       title: 'Home'
     },
     children: [
       {
-        path: 'manage',
-        loadChildren: './views/manage/manage.module#ManageModule'
+        path: 'contacts',
+        loadChildren: './views/contacts/contacts.module#ContactsModule'
+      },
+       {
+        path: 'business',
+        loadChildren: './views/business/business.module#BusinessModule'
+      },
+      {
+        path: 'accounting',
+        loadChildren: './views/accounting/accounting.module#AccountingModule'
       },
       {
         path: 'base',

@@ -8,9 +8,11 @@ return [
 
     'oauth' => [
         'callback'    => 'http://localhost/test',
-        'consumer_key'      => 'EPFSC1CZJEYTQQPCXH71QMN6PKBPXV',
-        'consumer_secret'   => 'DYFAXQBZWTVUUFVGEFTQOWKWH9P3VN',
-        'rsa_private_key'  => file_get_contents( 'atp_private.pem', true),
+       // 'consumer_key'      => 'EPFSC1CZJEYTQQPCXH71QMN6PKBPXV',
+        'consumer_key' => 'FPNYHJ3MMX4HRGQU8FWSIPKZYAJY3J',
+        //'consumer_secret'   => 'DYFAXQBZWTVUUFVGEFTQOWKWH9P3VN',
+        'consumer_secret'   => 'JHRCSHHGXKQYW3PHYMHC0IWQFH7DHL',
+        'rsa_private_key'  => file_get_contents( 'atp_new.pem', true),
     ],
     'curl' => [
         CURLOPT_SSL_VERIFYPEER => 0,

@@ -9,11 +9,13 @@
 namespace App\Http\Controllers\Api;
 
 
+use App\Services\XeroService;
+
 class ClientsController extends ContactController
 {
-    public function __construct()
+    public function __construct(XeroService $xeroService)
     {
-        parent::__construct();
+        parent::__construct($xeroService);
     }
     public function index()
     {
