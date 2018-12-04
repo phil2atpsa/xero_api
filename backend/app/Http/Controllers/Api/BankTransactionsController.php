@@ -10,17 +10,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+
 use App\Services\TransactionService;
+use App\Services\XeroService;
 
 class BankTransactionsController extends Controller {
 
     protected $xero;
     private $transaction_service;
 
-    static MODEL = "Accounting\\BankTransaction";
+   
 
     public function __construct(XeroService $xeroService) {
         $this->xero = $xeroService;
@@ -28,71 +27,15 @@ class BankTransactionsController extends Controller {
     }
 
     public function index() {
-        $bankTransactions = $this->xero->load('Accounting\\BankTransaction')->execute();
+        $bankTransactions = $this->xero->load(TransactionService::MODEL)->execute();
         return response()->json($bankTransactions->getArrayCopy(), 200);
     }
 
     public function show(string $id) {
-        $bankTransaction = $this->xero->loadByGUID('Accounting\\BankTransaction', $id);
+        $bankTransaction = $this->xero->loadByGUID(TransactionService::MODEL, $id);
         return response()->json($bankTransaction->toStringArray(), 200);
     }
 
-    public function store(Request $request) {
-        $post = $request->all();
-
-        try {
-            $validator = Validator::make($post, [
-                        'BankTransaction' => 'required',
-            ]);
-
-
-
-            if ($validator->fails()) {
-                throw new \Exception("Invalid Request");
-            }
-
-            $post = $post['BankTransaction'];
-
-
-            return response()->json([
-            'success' => true,
-            'message' => config('api_response.xero.success_on_create'),
-            'BankTransferID' => $this->transaction_service->create($post);
-            ], 200);
-        } catch (\Exception $ex) {
-
-            return response()->json(['success' => 'false', 'message' => $ex->getMessage()], 500);
-        }
-    }
-
-    public function update(Request $request, string $id) {
-        $post = $request->all();
-
-        try {
-            $validator = Validator::make($post, [
-                        'BankTransaction' => 'required',
-            ]);
-
-
-
-            if ($validator->fails()) {
-                throw new \Exception("Invalid Request");
-            }
-
-            $post = $post['BankTransaction'];
-
-
-
-
-            return response()->json([
-                        'success' => true,
-                        'message' => config('api_response.xero.success_on_create'),
-                        'BankTransferID' => $this->transaction_service->create($post, $id)
-                            ], 200);
-        } catch (\Exception $ex) {
-
-            return response()->json(['success' => 'false', 'message' => $ex->getMessage()], 500);
-        }
-    }
+   
 
 }

@@ -37,6 +37,8 @@ class TransactionService {
     private $xero = null;
     private $transactions;
 
+    const MODEL = 'Accounting\\BankTransaction';
+
     public function __construct(PrivateApplication $xero) {
         $this->xero = $xero;
         $this->transactions = new BankTransaction($this->xero);
@@ -56,14 +58,14 @@ class TransactionService {
                 throw new \Exception("Invalid Transfer Date format should be Y-m-d");
             }
 
-            $bankTransactions->setType($post['Type']);
+            $this->transactions->setType($post['Type']);
 
             $contact = $this->xero->loadByGUID(ContactService::MODEL, $post['ContactID']);
             $bankAccount = new BankAccount($this->xero);
             $bankAccount->setAccountID($post['BankAccountID']);
             $bankAccount->save();
 
-            if($transactionID ! null){
+            if($transactionID != null){
                  $this->transactions->setTransactionID($transactionID);
             }
             $this->transactions->setContact($contact);

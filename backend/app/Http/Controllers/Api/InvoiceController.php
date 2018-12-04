@@ -49,6 +49,17 @@ class InvoiceController extends Controller
                 ->getArrayCopy();
         return response()->json( $invoices , 200);
     }
+    public function payable_invoice() : \Illuminate\Http\JsonResponse
+    {
+         $invoices = $this->xero
+                ->load(InvoiceService::MODEL)
+                ->where('Type ="ACCREC"')
+                ->where('Status ="AUTHORISED"')
+                ->execute()
+                ->getArrayCopy();
+        return response()->json( $invoices , 200);
+        
+    }
     
     public function show($id) : \Illuminate\Http\JsonResponse
     {
