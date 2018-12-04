@@ -21,6 +21,7 @@ export class TransactionsComponent implements OnInit {
     'BankCode',
     'Date',
     'Reference',
+    'Reconciled',
     'Status',
     'Total'
     
@@ -64,13 +65,6 @@ export class TransactionsComponent implements OnInit {
 
   }
   
-   onAccountCreate(){
-    this.dialog.open(AccountFormComponent, this.matDialogConfig)
-      .afterClosed()
-      .subscribe(res => {
-        this.refresh();
-      });
-
-  }
+  
 
 }

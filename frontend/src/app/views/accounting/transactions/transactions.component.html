@@ -37,20 +37,33 @@
 
                             <ng-container matColumnDef="Contact">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Contact</mat-header-cell>
-                                <mat-cell *matCellDef="let item">{{item.Contact.Name}}</mat-cell>
+                                <mat-cell *matCellDef="let item">{{item.Contact != null ? item.Contact.Name : '' }}</mat-cell>
                             </ng-container>
                             <ng-container matColumnDef="BankCode">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>BankAccount Code</mat-header-cell>
                                 <mat-cell *matCellDef="let item">{{item.BankAccount.Code}}</mat-cell>
                             </ng-container>
 
+                         
+
                             <ng-container matColumnDef="Status">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Status</mat-header-cell>
                                 <mat-cell *matCellDef="let item">
-                                    <span class="badge badge-primary" *ngIf="item.Status=='ACTIVE'">{{item.Status}}</span>
-                                    <span class="badge badge-danger"  *ngIf="item.Status=='ARCHIVED'">{{item.Status}}</span>
+                                    <span class="badge badge-dark" *ngIf="item.Status=='DRAFT'">{{item.Status}}</span>
+                                    <span class="badge badge-primary"  *ngIf="item.Status=='SUBMITTED'">{{item.Status}}</span>
+                                  <span class="badge badge-success"  *ngIf="item.Status=='AUTHORISED'">{{item.Status}}</span>
+                                  <span class="badge badge-danger"  *ngIf="item.Status=='DELETED'">{{item.Status}}</span>
                                 </mat-cell>
                             </ng-container>
+                            
+                             <ng-container matColumnDef="Reconciled">
+                                <mat-header-cell *matHeaderCellDef mat-sort-header>Reconciled</mat-header-cell>
+                                <mat-cell *matCellDef="let item">
+                                    <i class="fa fa-check text-success" *ngIf="item.IsReconciled=='true'"></i>
+                                    <i class="fa fa-times text-danger" *ngIf="item.IsReconciled=='false'"></i>    
+                                </mat-cell>
+                            </ng-container>
+                            
                             <ng-container matColumnDef="Date">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header>Date</mat-header-cell>
 

@@ -20,6 +20,10 @@ export class InvoicesService {
         return this.http.get<any>(`${this.invoice_api_path}`);
   }
   
+  InvoivePayable(){
+       return this.http.get<any>(`${api_path}payable-invoice`);
+  }
+  
   SingleInvoice(InvoiceID : string) : Promise<any> {
 
 

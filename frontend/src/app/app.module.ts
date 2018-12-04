@@ -60,6 +60,7 @@ import {SharedModule} from './shared/shared.module';
 
 
 
+
 @NgModule({
   imports: [
     BrowserModule,
@@ -95,6 +96,7 @@ import {SharedModule} from './shared/shared.module';
     LogoutComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+
 
     
   ],

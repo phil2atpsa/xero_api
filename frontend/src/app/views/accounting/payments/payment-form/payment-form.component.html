@@ -1,0 +1,110 @@
+<form [formGroup]="payment_form" (submit)="save()">
+    <div class="animated fadeIn">
+        <div class="row">
+
+
+            <div class='col-lg-12'>
+                <div class="card">
+                    <div class="card-header">
+                        <i class='fa fa-plus-square'></i> <span> Making Payment </span>
+                        <div class="card-header-actions">
+                            <!--<button type="button" class="card-header-action btn btn-link btn-setting"><i class="icon-settings"></i></button>-->
+                         
+                            <button type="button" class="card-header-action btn btn-link btn-close" (click)="onCloseOperation()"><i class="icon-close"></i></button>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <label class="col-form-label">Invoice  </label> <br />
+                                <div class="controls">
+                                    <ng-select [items]="invoices"
+                                        bindLabel="InvoiceNumber"
+                                        placeholder="Select Invoice"
+
+                                        formControlName="invoice"
+
+                                        [ngClass]="{ 'is-invalid': submitted && f.invoice.errors }">
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="form-group col-sm-6">
+                            <label class="col-form-label"> Account  </label> <br />
+                            <div class="controls">
+                                <ng-select [items]="accounts"
+                                    bindLabel="Code"
+                                    placeholder="Select Account"
+
+                                    formControlName="account"
+
+                                    [ngClass]="{ 'is-invalid': submitted && f.account.errors }">
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-sm-6">
+                        <label class="col-form-label"> Date  </label> <br />
+                        <div class="controls">
+                            <input type="date" formControlName="date"  
+                                   class="form-control" placeholder="" 
+                                   [ngClass]="{ 'is-invalid': submitted && f.date.errors }" readOnly/>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label class="col-form-label"> Reference  </label> <br />
+                        <div class="controls">
+                            <input type="text" formControlName="reference"  
+                                   class="form-control" placeholder="" 
+                                   [ngClass]="{ 'is-invalid': submitted && f.reference.errors }" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label class="col-form-label"> Amount  </label> <br />
+                        <div class="controls">
+                            <input type="number" formControlName="amount"  
+                                   class="form-control" placeholder=""  step="any" min="0"
+                                   [ngClass]="{ 'is-invalid': submitted && f.amount.errors }" />
+
+                        </div>
+                    </div>
+                      <div class="form-group col-sm-6">
+                        <label class="col-form-label">   <br /> </label>  <br />
+                        <div class="controls">
+                            <input type="text"  disabled   class="form-control" />
+
+                        </div>
+                    </div>
+                </div>
+                
+
+
+
+
+
+            </div>
+            <div class="card-footer">
+                &nbsp; &nbsp; <button type="submit" class="btn btn-primary pull-right"><i class="fa fa-dot-circle-o"></i> Make Payment</button>
+                  &nbsp; &nbsp;  <button class="btn btn-danger pull-right" type="button" (click)="onCloseOperation()"><i class="fa fa-times-circle"></i> Cancel</button> 
+                  &nbsp; 
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+</div>
+
+
+</form>
+

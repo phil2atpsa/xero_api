@@ -17,7 +17,7 @@ export class ContactsComponent implements OnInit {
   searchKey ='';
   c_all = false;
   displayedColumns: string[] = [
-    'check_actions',
+   // 'check_actions',
     'name',
     'status',
     'email',

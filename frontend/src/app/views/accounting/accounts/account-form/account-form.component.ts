@@ -17,7 +17,7 @@ import swal from 'sweetalert2';
 export class AccountFormComponent implements OnInit {
   account_form: FormGroup; 
   account_types:any[];
-  account_class:any[];
+  account_classes:any[];
   selected_account_type:string;
   submitted=false;
   loading=false;

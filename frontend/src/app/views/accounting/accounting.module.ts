@@ -21,6 +21,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { AccountingComponent } from './accounting.component';
 import { AccountFormComponent } from './accounts/account-form/account-form.component';
 import { PaymentsComponent } from './payments/payments.component';
+import { PaymentFormComponent } from './payments/payment-form/payment-form.component';
 
 
 
@@ -47,10 +48,13 @@ import { PaymentsComponent } from './payments/payments.component';
     TransactionsComponent,
     AccountingComponent,
     AccountFormComponent,
-    PaymentsComponent
+    PaymentsComponent,
+    PaymentFormComponent
+  
   ],
   entryComponents: [
-    AccountFormComponent
+    AccountFormComponent,
+    PaymentFormComponent
   ]
 })
 export class AccountingModule { }
