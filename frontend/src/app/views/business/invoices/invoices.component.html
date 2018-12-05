@@ -14,8 +14,14 @@
                                 <i class="fa fa-times-circle"></i>
                             </button>
 
+                          <button mat-raised-button (click)="import_invoice()" class="btn btn-primary">
+                            <i class="fa fa-arrow-circle-o-up"></i>  Import
+                          </button> &nbsp;
+
+
+
                             <button mat-raised-button (click)="create_invoice()" class="btn btn-success">
-                                    <i class="fa fa-plus-circle"></i> Create New Invoice
+                                    <i class="fa fa-plus-circle"></i> Create
                             </button>
 
                         </div>
@@ -47,9 +53,9 @@
                              <ng-container matColumnDef="invoice_actions">
                                 <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
                                 <mat-cell *matCellDef="let item">
-                                    <button class="btn btn-dark  btn-block text-light size-2" *ngIf="item.Status == 'DRAFT'"> <i class="fa fa-dot-circle-o"></i> Submit </button>
-                                    <button class="btn btn-primary  btn-block text-light  size-2" *ngIf="item.Status == 'SUBMITTED'"> <i class="fa fa-dot-circle-o"></i> Authorise </button>
-                                    <button class="btn btn-success  btn-block text-light  size-2" *ngIf="item.Status == 'AUTHORISED'"> <i class="fa fa-dot-circle-o"></i> Pay </button>
+                                    <button class="btn btn-dark  btn-block text-light size-2" *ngIf="item.Status == 'DRAFT'" (click)="change_status('SUBMITTED', item.InvoiceID)"> <i class="fa fa-dot-circle-o"></i> Submit </button>
+                                    <button class="btn btn-primary  btn-block text-light  size-2" *ngIf="item.Status == 'SUBMITTED'" (click)="change_status('AUTHORISED', item.InvoiceID)"><i class="fa fa-dot-circle-o"></i> Authorise </button>
+                                    <button class="btn btn-success  btn-block text-light  size-2" *ngIf="item.Status == 'AUTHORISED'" (click)="make_payment( item.InvoiceID)"> <i class="fa fa-dot-circle-o"></i> Pay </button>
                                      <button class="btn btn-danger  btn-block text-light  size-2" *ngIf="item.Status == 'PAID'"> <i class="fa fa-archive"></i> Archived </button>
                                 </mat-cell>
                             </ng-container>

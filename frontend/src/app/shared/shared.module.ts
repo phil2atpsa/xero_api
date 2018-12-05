@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 
 import { GPlacesAutocompleteDirective } from '../directives/g-places-autocomplete.directive';
 import {AgmCoreModule} from '@agm/core';
+import {AccountingModule} from "../views/accounting/accounting.module";
+
 
 
 @NgModule({
@@ -13,7 +15,7 @@ import {AgmCoreModule} from '@agm/core';
     GPlacesAutocompleteDirective
   ],
   exports: [
-    AgmCoreModule, GPlacesAutocompleteDirective
+    AgmCoreModule, GPlacesAutocompleteDirective,AccountingModule
   ]
 })
 export class SharedModule { }

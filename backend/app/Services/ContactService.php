@@ -58,6 +58,21 @@ class ContactService
         return $contact;
 
     }
+    public function verifyContact($name, $mobile)
+    {
+        $contact = $this->xero->load(self::MODEL)
+            ->where('Name = "'.$name.'"')->execute()
+            ->first();
+        if($contact) {
+           return $contact;
+        } else {
+            $post['Name'] = $name;
+            $post['DefaultCurrency'] ='ZAR';
+            $post['Phones'][] =['PhoneType' => 'MOBILE', 'PhoneNumber'=>$mobile];
+            $contactID = $this->create($post);
+            return $this->xero->loadByGUID(self::MODEL,$contactID[0] );
+        }
+    }
 
     /**
      * @param array $post
@@ -186,7 +201,8 @@ class ContactService
             }
             $this->contact = \simplexml_load_string($this->contact->save()->getResponseBody());
 
-           return $this->contact->Contacts->Contact->ContactID;
+
+           return  $this->contact->Contacts->Contact->ContactID;
            
         } catch(\Exception  $ex){
 

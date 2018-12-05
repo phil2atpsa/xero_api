@@ -179,12 +179,18 @@ class ContactController extends Controller
             $info['iscustomer'] = $contact['IsCustomer'];
             $info['issupplier'] = $contact['IsSupplier'];
 
+
             foreach($contact['Addresses'] as $address) {
                 if($address['AddressType'] == 'STREET'){
                     $info['city'] = $address['City'] ??  $address['City'];
                     $info['region'] = $address['Region'] ??  $address['Region'];
                     $info['postal_code'] = $address['PostalCode'] ??  $address['PostalCode'];
                     $info['country'] = $address['Country'] ??  $address['Country'];
+                }
+            }
+            foreach($contact['Phones'] as $phone) {
+                if($phone['PhoneType'] == 'MOBILE'){
+                    $info['mobile_number'] =  $phone['PhoneCountryCode'].$phone['PhoneAreaCode'].$phone['PhoneNumber'];
                 }
             }
 
@@ -204,7 +210,7 @@ class ContactController extends Controller
     private function  pushInvoice(&$info, $key){
         $invoice_service = new InvoiceService($this->xero->getApplication());
        // $info['payable'] = $invoice_service->getAmountPayableTo($info['id']);
-        $info['due'] = $invoice_service->getAmountDueBy($info['id']);
+       // $info['due'] = $invoice_service->getAmountDueBy($info['id']);
     }
 
 

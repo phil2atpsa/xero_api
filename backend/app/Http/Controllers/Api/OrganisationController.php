@@ -7,15 +7,16 @@
  */
 
 namespace App\Http\Controllers\Api;
+use App\Services\XeroService;
 use XeroPHP\Application\PrivateApplication;
 use  App\Http\Controllers\Controller;
 
 class OrganisationController extends Controller
 {
     private $xero;
-    public function __construct()
+    public function __construct(XeroService $xeroService)
     {
-        $this->xero = new PrivateApplication(config('xero'));
+        $this->xero = $xeroService;
     }
 
     public function index()

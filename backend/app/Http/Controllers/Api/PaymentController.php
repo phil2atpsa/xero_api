@@ -13,6 +13,8 @@ use App\Http\Controllers\Controller;
 use App\Services\PaymentService;
 use App\Services\XeroService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Validator;
 
 class PaymentController extends Controller
 {
@@ -24,11 +26,36 @@ class PaymentController extends Controller
      * @var PaymentService
      */
     private $payment_service;
+    /**
+     * @var array
+     */
+    private static $banks = [
+        'FNB',
+        'CAPITEC',
+        'NEDBANK',
+        'ABSA',
+        'STANDARD BANK',
+        'BIDVEST BANK',
+        'INVESTEC LIMITED BANK'
+
+    ];
+
+    /**
+     * @var array
+     */
+    private static $method = [
+        'EFT',
+        'CASH',
+        'DEBIT',
+        'CREDIT',
+
+    ];
 
     /**
      * PaymentController constructor.
      * @param XeroService $xeroService
      */
+
     public function __construct(XeroService $xeroService) {
         $this->xero = $xeroService;
         $this->payment_service = new PaymentService($this->xero->getApplication());
@@ -55,5 +82,46 @@ class PaymentController extends Controller
         } catch (\Exception $ex){
             return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
         }
+    }
+    
+    public function make_kp_payment(Request $request)
+    {
+
+        $post = Input::all();
+        
+         try {
+            $validator = Validator::make($post, [
+                'policynumber' => 'required',
+                'amount' => 'required',
+                'bank'=> 'required',
+                'method' => 'required',
+                'ref' => 'required'
+
+            ]);
+            if($validator->fails()){
+                throw new \Exception("Required Fields Missing : PolicyNumber|Amount|Ref|Bank|Method");
+            }
+
+            if(!in_array( strtoupper($post['bank']), static::$banks)){
+                throw new \Exception("Bank should be one of the following :".implode("|", static::$banks));
+            }
+
+             if(!in_array( strtoupper($post['method']), static::$method)){
+                 throw new \Exception("Payment method be one of the following :".implode("|", static::$method));
+             }
+            
+              return response()->json([
+                'success'=> true,
+                'message'=> config('api_response.xero.success_on_create'),
+                'PaymentID' =>  $this->payment_service->kp_payment($post['policynumber'], $post['amount'],
+                    $post['ref'], $post['bank'], $post['method'])
+            ], 200);
+
+            
+         } catch(\Exception $ex){
+             return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
+         }
+         
+        
     }
 }

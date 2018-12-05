@@ -1,0 +1,69 @@
+
+<div class="animated fadeIn">
+  <div class="row">
+    <div class='col-lg-6 offset-2'>
+      <form  [formGroup]="import_form" (submit)="import_invoices()">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> Importing Invoices
+
+        </div>
+
+        <div class="card-body">
+          Please follow the steps below: <br /> <br />
+
+          <h5>1. Download  the nvoice template file<hr /></h5>
+          Start by downloading  the CSV (Comma Separated Values) template file. This file has the correct column headings  needed to import your invoice data.
+          <br /> <i class="fa fa-file-excel-o"></i> <a href="{{file_path}}"> Download File </a>
+          <br /><br />
+
+          <h5> 2. Copy your invoices in to the template <hr/> </h5>
+          Export your invoices from your  system as a Comma Separated Values separated list.
+          Using Excel or another spreadsheet editor, copy and paste your invoices from the exported
+          file into the  template.
+          Make sure the invoice data you copy matches the column headings provided in the template.
+          <b> IMPORTANT: Do not change the column headings provided in the  template.
+            These need to be unchanged for the import to work in the next step.
+            Dates are assumed to be in English format. For example, 25-12-2018.
+            And please note that Invoices with invoice number(TID)  that are already in the system will be ignored.
+            If Contact details not found  the system will create  with details provided.
+
+          </b>
+          <br /><br />
+          <h5> 3. Import the updated template file <hr/> </h5>
+          <div class="row">
+            <div class="col-lg-12">
+
+              <div class="form-group col-sm-12">
+                <label class="col-form-label" >Updated Template</label>
+                <div class="controls">
+
+                  <input type="file"  accept="csv|txt" class="form-control"
+                         (change)="fileUploaded($event)" placeholder=""
+                         formControlName="template_file"
+                         [ngClass]="{ 'is-invalid': submitted && f.template_file.errors }"
+
+                  />
+
+
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+
+        </div>
+        <div class="card-footer">
+          <span  [ngClass]="{'hide':!loading}">          <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+              Please wait while loading
+          </span>
+          <button class="btn btn-primary pull-right"><i class="fa fa-dot-circle-o"></i> Import</button>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+

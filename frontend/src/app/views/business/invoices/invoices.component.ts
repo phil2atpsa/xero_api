@@ -2,7 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import {InvoicesService} from "../../../services/invoices.service";
 import {ContactService} from "../../../services/contact.service";
 import {MatSort, MatTableDataSource,MatPaginator} from "@angular/material";
+import {MatDialog, MatDialogConfig} from "@angular/material";
+import {PaymentFormComponent} from "../../accounting/payments/payment-form/payment-form.component";
 import {Router} from "@angular/router";
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-invoices',
@@ -13,6 +16,8 @@ export class InvoicesComponent implements OnInit {
   list: MatTableDataSource<any>;
   searchKey ='';
  // c_all = false;
+
+  matDialogConfig: MatDialogConfig = new MatDialogConfig();
   displayedColumns: string[] = [
     'contact',
     'invoice_number',
@@ -26,7 +31,12 @@ export class InvoicesComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;   
-  constructor(private invoiceService: InvoicesService,private contactService: ContactService, private router: Router) { }
+  constructor(private invoiceService: InvoicesService,private contactService: ContactService,
+              private router: Router, private dialog: MatDialog) {
+    this.matDialogConfig.disableClose = true;
+    this.matDialogConfig.autoFocus = true;
+    this.matDialogConfig.width = '55%';
+  }
 
   ngOnInit() {
       this.refresh();
@@ -76,5 +86,34 @@ export class InvoicesComponent implements OnInit {
        localStorage.removeItem('contact');
       this.router.navigateByUrl("/business/invoices/create");
   }
+  import_invoice(){
+    localStorage.removeItem('contact');
+    this.router.navigateByUrl("/business/invoices/import");
+
+  }
+  change_status(status:string, InvoiceID:string){
+    this.invoiceService.updateInvoice({Invoice:{Status:status}}, InvoiceID)
+      .then(res => {
+        swal("Success", res.message,'success');
+        this.refresh();
+
+      }, rej => {
+        swal("Error", rej.message,'error');
+      });
+  }
+  make_payment(InvoiceID:string){
+    this.invoiceService.SingleInvoice(InvoiceID).then(
+      res => {
+        localStorage.setItem('invoice', JSON.stringify(res));
+        this.dialog.open(PaymentFormComponent)
+          .afterClosed()
+          .subscribe(res => {
+            this.refresh();
+          });
+      }
+    )
+
+  }
+  export_invoice(){}
 
 }

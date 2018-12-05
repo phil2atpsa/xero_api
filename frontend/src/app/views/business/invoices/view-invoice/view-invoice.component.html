@@ -130,6 +130,10 @@
                     </table>
 
                 </div>
+              <div class="card-footer" *ngIf="invoice.Status == 'AUTHORISED'">
+                <button class="btn btn-danger pull-right" (click)="make_payment()"><i class="icon icon-credit-card"></i>  Make Payment</button>
+
+              </div>
             </div>
 
         </div>

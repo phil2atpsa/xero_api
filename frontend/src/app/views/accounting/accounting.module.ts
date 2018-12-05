@@ -3,7 +3,6 @@ import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NgSelectModule} from "@ng-select/ng-select";
 import {CollapseModule} from "ngx-bootstrap";
-import {SharedModule} from "../../shared/shared.module";
 import {AccountingRoutingModule}  from "./accounting-routing.module";
 
 import {
@@ -39,7 +38,6 @@ import { PaymentFormComponent } from './payments/payment-form/payment-form.compo
     MatDialogModule,
     CollapseModule.forRoot(),
     NgSelectModule,
-    SharedModule,
     MatCheckboxModule,
     AccountingRoutingModule
   ],

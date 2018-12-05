@@ -20,6 +20,8 @@ import {
 import {InvoicesComponent} from './invoices.component';
 import {ViewInvoiceComponent} from './view-invoice/view-invoice.component';
 import { FormInvoiceComponent } from './form-invoice/form-invoice.component';
+import {PaymentFormComponent} from "../../accounting/payments/payment-form/payment-form.component";
+import { ImportInvoiceComponent } from './import-invoice/import-invoice.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -41,10 +43,11 @@ import { FormInvoiceComponent } from './form-invoice/form-invoice.component';
   declarations: [
    InvoicesComponent,
    ViewInvoiceComponent,
-   FormInvoiceComponent
+   FormInvoiceComponent,
+   ImportInvoiceComponent
   ],
   entryComponents: [
-   
+    PaymentFormComponent
   ]
 })
 export class InvoicesModule { }

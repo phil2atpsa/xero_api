@@ -30,7 +30,10 @@ export class PaymentFormComponent implements OnInit {
   public matDialogRef: MatDialogRef<PaymentFormComponent>) { }
 
   ngOnInit() {
-      this.accountService.getList().subscribe(
+
+    this.selected_invoice = JSON.parse(localStorage.getItem('invoice'));
+
+    this.accountService.getList().subscribe(
       list => {
         this.accounts = list.map(
           item => {
@@ -60,6 +63,7 @@ export class PaymentFormComponent implements OnInit {
     
     if(this.selected_invoice != null) {
          this.payment_form.patchValue({invoice: this.selected_invoice });
+      this.payment_form.patchValue({amount: this.selected_invoice.Total});
          this.payment_form.controls.invoice.disable();
     }
      this.payment_form.patchValue({date: this.currentDate()});
@@ -83,6 +87,10 @@ export class PaymentFormComponent implements OnInit {
              return;
          }
          this.loading =true;
+        // alert(this.selected_invoice.InvoiceID);
+         const InvoiceID = this.selected_invoice != null ? this.selected_invoice.InvoiceID :
+           this.payment_form.value.invoice.InvoiceID;
+
          const post = 
              {
                  Payment :
@@ -90,7 +98,7 @@ export class PaymentFormComponent implements OnInit {
                     Amount :   this.payment_form.value.amount,
                     Date : this.payment_form.value.date,
                     AccountID:  this.payment_form.value.account.AccountID,
-                    InvoiceID:  this.payment_form.value.invoice.InvoiceID,
+                    InvoiceID: InvoiceID,
                     reference : this.payment_form.value.reference
                      }
             }

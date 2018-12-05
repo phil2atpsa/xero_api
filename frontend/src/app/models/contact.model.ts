@@ -13,6 +13,7 @@ export class Contact implements Deserializable {
   public region: string;
   public postal_code: string;
   public due: number;
+  public mobile_number: string;
 
   deserialize(input: any): this {
     Object.assign(this, input);

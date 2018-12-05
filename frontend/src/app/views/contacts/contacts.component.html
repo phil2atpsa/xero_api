@@ -51,6 +51,11 @@
                   <i>{{item.city}} {{item.country}}</i>  </mat-cell> <br />
 
               </ng-container>
+              <ng-container matColumnDef="mobile_number">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Mobile</mat-header-cell>
+                <mat-cell *matCellDef="let item">{{item.mobile_number}} </mat-cell>
+
+              </ng-container>
 
               <ng-container matColumnDef="email">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>Email</mat-header-cell>

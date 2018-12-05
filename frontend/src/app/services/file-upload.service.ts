@@ -6,7 +6,7 @@ import {HttpClient, HttpHeaders, HttpParams, HttpRequest} from '@angular/common/
 })
 export class FileUploadService {
   constructor(private http: HttpClient) { }
-  public uploadFileToUrl(url: string, file: File, data_key: string,  data: string, input_name: string) {
+  public uploadFileToUrl(url: string, file: File, data_key: string,  data: string, input_name: string):Promise<any> {
      const fd = new FormData();
      if (file != null) {
        fd.append(input_name, file, file.name);

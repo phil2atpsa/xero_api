@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         // Commands\Inspire::class,
-	 Commands\Serve::class
+	 Commands\Serve::class,
+        Commands\UploadInvoices::class
     ];
 
     /**

@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import {InvoicesComponent} from './invoices.component';
 import {ViewInvoiceComponent} from './view-invoice/view-invoice.component';
 import { FormInvoiceComponent } from './form-invoice/form-invoice.component';
+import {ImportInvoiceComponent} from "./import-invoice/import-invoice.component";
 
 
 
@@ -38,6 +39,14 @@ const routes: Routes = [
         data: {
           title: 'New'
         }      
+      },
+      {
+
+        path: 'import',
+        component: ImportInvoiceComponent,
+        data: {
+          title: 'Import'
+        }
       },
     ]
   },
