@@ -48,15 +48,6 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/frontend/src/app/views/business/invoices/view-invoice/view-invoice.component.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1980">
-              <caret line="132" column="75" selection-start-line="132" selection-start-column="75" selection-end-line="132" selection-end-column="75" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/frontend/src/app/views/business/invoices/invoices.component.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="975">
@@ -133,13 +124,25 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/frontend/src/app/services/invoices.service.ts">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
               <caret line="67" column="19" selection-start-line="67" selection-start-column="19" selection-end-line="67" selection-end-column="19" />
               <folding>
                 <element signature="e#0#43#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/backend/app/Services/InvoiceService.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="272">
+              <caret line="194" column="13" selection-start-line="194" selection-start-column="13" selection-end-line="194" selection-end-column="13" />
+              <folding>
+                <element signature="e#116#134#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -228,12 +231,12 @@
         <option value="$PROJECT_DIR$/backend/app/Console/Kernel.php" />
         <option value="$PROJECT_DIR$/backend/config/export_templates.php" />
         <option value="$PROJECT_DIR$/backend/app/Console/Commands/UploadInvoices.php" />
-        <option value="$PROJECT_DIR$/backend/app/Services/InvoiceService.php" />
         <option value="$PROJECT_DIR$/backend/app/Services/ContactService.php" />
         <option value="$PROJECT_DIR$/frontend/src/app/views/business/invoices/invoices.component.html" />
         <option value="$PROJECT_DIR$/frontend/src/app/views/business/invoices/invoices.component.ts" />
         <option value="$PROJECT_DIR$/frontend/src/app/views/accounting/payments/payment-form/payment-form.component.ts" />
         <option value="$PROJECT_DIR$/frontend/src/app/services/invoices.service.ts" />
+        <option value="$PROJECT_DIR$/backend/app/Services/InvoiceService.php" />
       </list>
     </option>
   </component>
@@ -322,64 +325,32 @@
             <path>
               <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
               <item name="xero_down" type="462c0819:PsiDirectoryNode" />
-              <item name="frontend" type="462c0819:PsiDirectoryNode" />
+              <item name="backend" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
               <item name="xero_down" type="462c0819:PsiDirectoryNode" />
-              <item name="frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
-              <item name="xero_down" type="462c0819:PsiDirectoryNode" />
-              <item name="frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="backend" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
               <item name="xero_down" type="462c0819:PsiDirectoryNode" />
-              <item name="frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="backend" type="462c0819:PsiDirectoryNode" />
               <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="services" type="462c0819:PsiDirectoryNode" />
+              <item name="Http" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
+              <item name="xero_down" type="462c0819:PsiDirectoryNode" />
+              <item name="backend" type="462c0819:PsiDirectoryNode" />
+              <item name="app" type="462c0819:PsiDirectoryNode" />
+              <item name="Services" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
               <item name="xero_down" type="462c0819:PsiDirectoryNode" />
               <item name="frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
-              <item name="xero_down" type="462c0819:PsiDirectoryNode" />
-              <item name="frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="accounting" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
-              <item name="xero_down" type="462c0819:PsiDirectoryNode" />
-              <item name="frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="xero_down" type="b2602c69:ProjectViewProjectNode" />
-              <item name="xero_down" type="462c0819:PsiDirectoryNode" />
-              <item name="frontend" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="app" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="business" type="462c0819:PsiDirectoryNode" />
-              <item name="invoices" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -448,18 +419,18 @@
       <workItem from="1543946283524" duration="10197000" />
       <workItem from="1543998579055" duration="21181000" />
       <workItem from="1544034048398" duration="4321000" />
-      <workItem from="1544039992804" duration="72000" />
+      <workItem from="1544039992804" duration="984000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="149936000" />
+    <option name="totallyTimeSpent" value="150848000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.31240544" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.31240544" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Gulp" order="2" side_tool="true" />
       <window_info id="npm" order="3" side_tool="true" />
@@ -475,8 +446,8 @@
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" visible="true" weight="0.3289689" />
-      <window_info anchor="bottom" id="Terminal" order="12" weight="0.3295082" />
+      <window_info anchor="bottom" id="Event Log" order="11" sideWeight="0.5015129" side_tool="true" visible="true" weight="0.3289689" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="12" sideWeight="0.49848714" visible="true" weight="0.3289689" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -710,16 +681,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/backend/app/Services/InvoiceService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="570">
-          <caret line="46" column="28" selection-start-line="46" selection-start-column="28" selection-end-line="46" selection-end-column="28" />
-          <folding>
-            <element signature="e#116#134#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/backend/app/Http/Controllers/Api/InvoiceController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2190">
@@ -869,6 +830,16 @@
           <caret line="67" column="19" selection-start-line="67" selection-start-column="19" selection-end-line="67" selection-end-column="19" />
           <folding>
             <element signature="e#0#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/backend/app/Services/InvoiceService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="194" column="13" selection-start-line="194" selection-start-column="13" selection-end-line="194" selection-end-column="13" />
+          <folding>
+            <element signature="e#116#134#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

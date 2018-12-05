@@ -112,22 +112,30 @@ class InvoiceService
         try {
 
            
-            if (!in_array($post['Type'], [Invoice::INVOICE_TYPE_ACCPAY, Invoice::INVOICE_TYPE_ACCREC])) {
+            if (isset($post['Type']) && !in_array($post['Type'], [Invoice::INVOICE_TYPE_ACCPAY, Invoice::INVOICE_TYPE_ACCREC])) {
                 throw  new \Exception("Invalid Invoice Type should
                     be one of : ".Invoice::INVOICE_TYPE_ACCPAY."|".Invoice::INVOICE_TYPE_ACCREC);
 
             }
-            $date = Carbon::createFromFormat("Y-m-d", $post['Date']);
+            if(isset($post['Date'])) {
+                $date = Carbon::createFromFormat("Y-m-d", $post['Date']);
 
-            if ( $date === false) {
-                throw  new \Exception("Invalid Invoice Date format should be Y-m-d\TH:i:s");
+                if ($date === false) {
+                    throw  new \Exception("Invalid Invoice Date format should be Y-m-d\TH:i:s");
+                }
+                $this->invoice->setDate($date);
+
+
             }
-            $due_date = Carbon::createFromFormat("Y-m-d", $post['DueDate']);
-            if ( $due_date === false) {
-                throw  new \Exception("Invalid Invoice DueDate format should be Y-m-d\TH:i:s");
+            if(isset($post['DueDate'])) {
+                $due_date = Carbon::createFromFormat("Y-m-d", $post['DueDate']);
+                if ($due_date === false) {
+                    throw  new \Exception("Invalid Invoice DueDate format should be Y-m-d\TH:i:s");
+                }
+                $this->invoice->setDueDate($due_date);
             }
 
-            if (!in_array($post['Status'], [Invoice::INVOICE_STATUS_AUTHORISED,
+            if (isset($post['Status']) && !in_array($post['Status'], [Invoice::INVOICE_STATUS_AUTHORISED,
                 Invoice::INVOICE_STATUS_DELETED, Invoice::INVOICE_STATUS_DRAFT,
                 Invoice::INVOICE_STATUS_PAID, Invoice::INVOICE_STATUS_SUBMITTED, Invoice::INVOICE_STATUS_VOIDED  ])) {
                 throw  new \Exception("Invalid Invoice Status should
@@ -136,11 +144,13 @@ class InvoiceService
 
             }
 		
+            if($id != null) {
+                $this->invoice->setInvoiceID($id);
+            }
 
-	    $this->invoice->setInvoiceID($id);
-            $this->invoice->setType($post['Type']);
-            $this->invoice->setDate($date);
-            $this->invoice->setDueDate($due_date);
+            if(isset($post['Type']))
+                $this->invoice->setType($post['Type']);
+
 
             if(isset($post['InvoiceNumber']))
                 $this->invoice->setInvoiceNumber($post['InvoiceNumber']);
@@ -164,21 +174,24 @@ class InvoiceService
             if(isset($post['LineAmountTypes']))
                $invoice->setLineAmountTypes($post['LineAmountTypes']);
 
-            foreach($post['LineItems'] as $LineItems){
-                $lineItem = new LineItem($this->xero);
-                $lineItem->setQuantity($LineItems['Quantity']);
-                $lineItem->setDescription($LineItems['Description']);
-                $lineItem->setUnitAmount($LineItems['UnitAmount']);
-                if(isset($LineItems['TaxType']))
-                    $lineItem->setTaxType($LineItems['TaxType']);
+            if(isset($post['LineItems'])) {
 
-                if(isset($LineItems['TaxAmount']))
-                    $lineItem->setTaxAmount((float) $LineItems['TaxAmount']);
+                foreach ($post['LineItems'] as $LineItems) {
+                    $lineItem = new LineItem($this->xero);
+                    $lineItem->setQuantity($LineItems['Quantity']);
+                    $lineItem->setDescription($LineItems['Description']);
+                    $lineItem->setUnitAmount($LineItems['UnitAmount']);
+                    if (isset($LineItems['TaxType']))
+                        $lineItem->setTaxType($LineItems['TaxType']);
 
-                if(isset($LineItems['AccountCode']))
-                    $lineItem->setAccountCode( $LineItems['AccountCode']);
+                    if (isset($LineItems['TaxAmount']))
+                        $lineItem->setTaxAmount((float)$LineItems['TaxAmount']);
 
-                $this->invoice->addLineItem($lineItem);
+                    if (isset($LineItems['AccountCode']))
+                        $lineItem->setAccountCode($LineItems['AccountCode']);
+
+                    $this->invoice->addLineItem($lineItem);
+                }
             }
 
             $this->invoice = \simplexml_load_string($this->invoice->save()->getResponseBody());
