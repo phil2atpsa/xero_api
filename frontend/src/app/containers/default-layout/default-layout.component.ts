@@ -22,9 +22,6 @@ export class DefaultLayoutComponent implements  OnInit{
   }
 
   ngOnInit(): void {
-    const is_admin : boolean =  this.auth.getCurrentUser().permissions.indexOf('app_admin') != -1;
-    if (!is_admin) { // Not Admin remove all admin menu
-        this.navItems.splice(5, 1);
-    }
+
   }
 }

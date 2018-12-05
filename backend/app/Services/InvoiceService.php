@@ -175,23 +175,23 @@ class InvoiceService
                $invoice->setLineAmountTypes($post['LineAmountTypes']);
 
             if(isset($post['LineItems'])) {
+                
+            foreach($post['LineItems'] as $LineItems){
+                $lineItem = new LineItem($this->xero);
+                $lineItem->setQuantity($LineItems['Quantity']);
+                $lineItem->setDescription($LineItems['Description']);
+                $lineItem->setUnitAmount($LineItems['UnitAmount']);
+                if(isset($LineItems['TaxType']))
+                    $lineItem->setTaxType($LineItems['TaxType']);
 
-                foreach ($post['LineItems'] as $LineItems) {
-                    $lineItem = new LineItem($this->xero);
-                    $lineItem->setQuantity($LineItems['Quantity']);
-                    $lineItem->setDescription($LineItems['Description']);
-                    $lineItem->setUnitAmount($LineItems['UnitAmount']);
-                    if (isset($LineItems['TaxType']))
-                        $lineItem->setTaxType($LineItems['TaxType']);
+                if(isset($LineItems['TaxAmount']))
+                    $lineItem->setTaxAmount((float) $LineItems['TaxAmount']);
 
-                    if (isset($LineItems['TaxAmount']))
-                        $lineItem->setTaxAmount((float)$LineItems['TaxAmount']);
+                if(isset($LineItems['AccountCode']))
+                    $lineItem->setAccountCode( $LineItems['AccountCode']);
 
-                    if (isset($LineItems['AccountCode']))
-                        $lineItem->setAccountCode($LineItems['AccountCode']);
-
-                    $this->invoice->addLineItem($lineItem);
-                }
+                $this->invoice->addLineItem($lineItem);
+            }
             }
 
             $this->invoice = \simplexml_load_string($this->invoice->save()->getResponseBody());
