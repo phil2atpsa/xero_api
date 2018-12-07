@@ -8,6 +8,8 @@
 
 namespace App\Console\Commands;
 
+use App\Collections;
+use Complex\Exception;
 use Illuminate\Console\Command;
 use App\Services\ContactService;
 use App\Services\InvoiceService;
@@ -22,7 +24,7 @@ class UploadInvoices  extends Command
      *
      * @var string
      */
-    protected $signature = 'uploadInvoices';
+    protected $signature = 'UploadInvoices';
 
     /**
      * The console command description.
@@ -38,7 +40,7 @@ class UploadInvoices  extends Command
      */
     public function handle()
     {
-        $spreadsheet = IOFactory::load(storage_path(config('export_templates.path.invoice')));
+       /* $spreadsheet = IOFactory::load(storage_path(config('export_templates.path.invoice')));
         $worksheet = $spreadsheet->getActiveSheet();
         $data = $worksheet->toArray();
         $max_rows = 10;
@@ -51,74 +53,26 @@ class UploadInvoices  extends Command
             $end =  $k == 1 ? $max_rows:  $k  * $max_rows;
             $this->process($data, $start, $end );
             sleep(60);
+        }*/
+        $collections = Collections::Where('synced', 0)->get();
+
+        foreach ($collections as $collection)
+        {
+            try {
+                $this->process($collection);
+            } catch(\Exception $ex){
+                continue;
+            }
         }
+
 
     }
 
-    private function process($data, $start, $end)
+    private function process(Collections $collection)
     {
         $app = new PrivateApplication(config('xero'));
         $invoice_service = new InvoiceService($app);
-
-
-        for($i=$start;$i< $end; $i++) {
-            $reference = $data[$i][2];
-            $invoice_number = $data[$i][1]; //tid
-            $reference = $data[$i][2]; //Reference
-            $contact_name = $data[$i][3]; //Name
-            $mobile = $data[$i][4]; //Cell
-            $policy_number = $data[$i][5]; //policy Number
-            $collection_amount = $data[$i][6]; // collection amount
-
-            $contact_service = new ContactService($app);
-            $contact = $contact_service->verifyContact($contact_name, $mobile);
-           // $invoice_number = "echo190930";
-            $existing = $app->load(InvoiceService::MODEL)->where('InvoiceNumber="' . $invoice_number . '"')
-                ->execute()->first();
-
-
-            if ($existing === null) {
-                try {
-
-                    $invoice = [
-                        'Contact' => $contact,
-                        'InvoiceNumber' => $invoice_number,
-                        'Date' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
-                        'DueDate' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
-                        'Reference' => $reference,
-                        'CurrencyCode' => 'ZAR',
-                        'Status' => 'AUTHORISED',
-                        'Type' => Invoice::INVOICE_TYPE_ACCREC,
-                        'SubTotal' => $collection_amount,
-                        'PolicyNumber' => $policy_number,
-                        'LineAmountTypes' => 'Exclusive',
-                        'TotalTax' => 0,
-                        'Total' => $collection_amount,
-                        'LineItems' => [[
-                            'Description' => 'Unpaid premium for ' . $policy_number,
-                            'Quantity' => 1,
-                            'UnitAmount' => $collection_amount,
-                            'TaxType' => 'OUTPUT',
-                            'TaxAmount' => 0,
-                            'LineAmount' => $collection_amount,
-                            'AccountCode' => 200
-                        ]]
-
-
-                    ];
-                    // array_push($invoices, $invoice);
-
-                    echo $invoice_service->saveBulk($invoice)." Invoice {$invoice_number} Saved for Contact " . $contact->Name . "\n";
-
-                } catch(\Exception $ex){
-                    echo $ex->getMessage()."\n";
-                    continue;
-                }
-
-            }
-
-        }
-
+        $invoice_service->sync($collection, true);
     }
 
 }

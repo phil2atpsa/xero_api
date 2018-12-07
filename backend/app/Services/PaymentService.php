@@ -6,18 +6,21 @@
  * Date: 2018/12/03
  * Time: 19:50
  */
-
 namespace App\Services;
 
+
+use App\Collections;
+use App\Payments;
+use Sujip\Guid\Guid;
 use XeroPHP\Application\PrivateApplication;
 use XeroPHP\Models\Accounting\Payment;
 use Carbon\Carbon;
+use XeroPHP\Remote\Exception;
+
 
 class PaymentService {
 
-    /**
-     *
-     */
+
     const MODEL = 'Accounting\\Payment';
 
     /**
@@ -29,12 +32,14 @@ class PaymentService {
      * PaymentService constructor.
      * @param PrivateApplication $xero
      */
-    public function __construct(PrivateApplication $xero) {
+    public function __construct(PrivateApplication $xero)
+    {
         $this->xero = $xero;
         $this->payment = new Payment($this->xero);
     }
 
-    public function makePayment(array $post) {
+    public function makePayment(array $post)
+    {
         try {
 
             $this->payment->setAmount($post['Amount']);
@@ -71,20 +76,30 @@ class PaymentService {
      */
     public function kp_payment($policyNumber, $amount,$reference,  $bank, $method) {
 
-        $this->payment->setAmount($amount);
-        $date = Carbon::createFromFormat("Y-m-d", Carbon::now()->format('Y-m-d'));
-        $this->payment->setDate($date);
+        $invoice_service = new InvoiceService($this->xero);
 
-        $account = $this->xero->load(AccountService::MODEL)
-                        ->where('Code = "090"')
-                        ->execute()->first();
+        if(Collections::Where('policy_number', $policyNumber)->exists()){
+            $collection = Collections::Where('policy_number', $policyNumber)->first();
 
 
-        $invoice = $this->xero->load(InvoiceService::MODEL)
-                        ->where('Reference = "' . $policyNumber . '"')
-                        ->where('Type ="ACCREC"')
-                        ->execute()->first();
-        if ($invoice) {
+            if(!$collection->synced){
+                $invoice_service->sync($collection);
+            }
+
+            $this->payment->setAmount($amount);
+            $date = Carbon::createFromFormat("Y-m-d", Carbon::now()->format('Y-m-d'));
+            $this->payment->setDate($date);
+
+            $account = $this->xero->load(AccountService::MODEL)
+                ->where('Code = "090"')
+                ->execute()->first();
+
+
+            $invoice = $this->xero->load(InvoiceService::MODEL)
+                ->where('Reference = "' . $policyNumber . '"')
+                ->where('Type ="ACCREC"')
+                ->execute()->first();
+
             $this->payment->setAccount($account);
             $this->payment->setInvoice($invoice);
             $this->payment->setIsReconciled(True);
@@ -96,11 +111,17 @@ class PaymentService {
 
         } else {
 
-            file_put_contents(storage_path('failed_payments.csv'),
-                implode(",", [$policyNumber, $amount,$reference,  $bank, $method])."\n", FILE_APPEND);
-
+            $payment = new Payments();
+            $payment->policy_number = $policyNumber;
+            $payment->amount = $amount;
+            $payment->reference = $reference;
+            $payment->bank = $bank;
+            $payment->method = $method;
+            $payment->save();
+            $guid = new Guid();
+            return [$guid->create()];
         }
-        return true;
+
 
 
     }

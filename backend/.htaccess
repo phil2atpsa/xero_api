@@ -1,29 +1,9 @@
-<IfModule mod_rewrite.c>
-    # Do not change this line.
-    RewriteEngine on
+RewriteEngine On
 
-    # Change %host% to be your primary domain.
-    RewriteCond %{HTTP_HOST} ^(www.)?%echoswitchafrica.com%$
+RewriteRule ^$  admin/ [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !^admin/
+RewriteRule ^(.*)$ admin/
 
-    # Change 'web' to be the folder you will use for your primary domain.
-    RewriteCond %{REQUEST_URI} !^/public/
 
-    #********************
-    # NOT RRCOMMENDED   *
-    #********************
-    #
-    # Uncomment those two lines if you want dirs and files to be accessible out of the
-    # your primary domain dir.
-
-    #RewriteCond %{REQUEST_FILENAME} !-f 
-    #RewriteCond %{REQUEST_FILENAME} !-d
-
-    # Change 'web' to be the folder you will use for your primary domain.
-    RewriteRule ^(.*)$ /web/$1
-
-    # Change %host% to be your primary domain again. 
-    # Change 'web' to be the folder you will use for your primary domain 
-    # followed by / then the main file for your site, index.php, index.html, etc.
-    RewriteCond %{HTTP_HOST} ^(www.)?%echoswitchafrica.com%$ 
-    RewriteRule ^(/)?$ public/index.php [L]
-</IfModule>

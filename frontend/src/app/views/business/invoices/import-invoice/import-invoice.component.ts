@@ -52,7 +52,7 @@ export class ImportInvoiceComponent implements OnInit {
         if(res.success) {
             swal('Success', res.message , 'success');
             const $router = this.router;
-          //  this.loading = false;
+            this.loading = false;
             setTimeout(function () {
                $router.navigate(['business/invoices']);
             }, 3000) ;

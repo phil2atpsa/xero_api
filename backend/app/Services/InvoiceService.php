@@ -10,6 +10,7 @@ namespace App\Services;
 
 
 
+use App\Collections;
 use Carbon\Carbon;
 use XeroPHP\Application\PrivateApplication;
 use XeroPHP\Models\Accounting\Invoice;
@@ -172,7 +173,7 @@ class InvoiceService
             $this->invoice->setStatus($post['Status']);
 
             if(isset($post['LineAmountTypes']))
-               $invoice->setLineAmountTypes($post['LineAmountTypes']);
+                $this->invoice->setLineAmountTypes($post['LineAmountTypes']);
 
             if(isset($post['LineItems'])) {
                 
@@ -271,7 +272,7 @@ class InvoiceService
             $this->invoice->setStatus($post['Status']);
 
             if(isset($post['LineAmountTypes']))
-               $invoice->setLineAmountTypes($post['LineAmountTypes']);
+               $this->invoice->setLineAmountTypes($post['LineAmountTypes']);
 
             foreach($post['LineItems'] as $LineItems){
                 $lineItem = new LineItem($this->xero);
@@ -298,6 +299,72 @@ class InvoiceService
         } catch (\Exception  $ex){
 
            throw new \Exception($ex->getMessage());
+        }
+
+    }
+
+    public function sync(Collections $collection, $verbose=false)
+    {
+
+        $contact_service = new ContactService($this->xero);
+
+        $contact = $contact_service->verifyContact($collection->contact, $collection->mobile);
+
+        $existing = $this->xero->load(InvoiceService::MODEL)->where('InvoiceNumber="' . $collection->tid . '"')
+            ->execute()->first();
+
+
+        if ($existing === null) {
+            try {
+
+                $invoice = [
+                    'Contact' => $contact,
+                    'InvoiceNumber' => $collection->tid,
+                    'Date' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
+                    'DueDate' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
+                    'Reference' => $collection->reference,
+                    'CurrencyCode' => 'ZAR',
+                    'Status' => 'AUTHORISED',
+                    'Type' => Invoice::INVOICE_TYPE_ACCREC,
+                    'SubTotal' => $collection->collection_amount,
+                    'PolicyNumber' => $collection->policy_number,
+                    'LineAmountTypes' => 'Exclusive',
+                    'TotalTax' => 0,
+                    'Total' => $collection->collection_amount,
+                    'LineItems' => [[
+                        'Description' => 'Unpaid premium for ' . $collection->policy_number,
+                        'Quantity' => 1,
+                        'UnitAmount' => $collection->collection_amount,
+                        'TaxType' => 'OUTPUT',
+                        'TaxAmount' => 0,
+                        'LineAmount' => $collection->collection_amount,
+                        'AccountCode' => 200
+                    ]]
+
+
+                ];
+                // array_push($invoices, $invoice);
+                $invoice_id =  $this->saveBulk($invoice);
+                $collection->synced = 1;
+                $collection->save();
+
+                if($verbose) {
+                    echo "{$invoice_id} Invoice {$collection->tid} Saved for Contact " . $contact->Name . "\n";
+                    sleep(30);
+                }
+
+            } catch(\Exception $ex){
+                echo $ex->getMessage()."\n";
+            }
+
+
+
+        } else {
+            $collection->synced = 1;
+            $collection->save();
+
+            if($verbose)
+                echo "Invoice {$collection->tid} Skipped(Existing) for Contact " . $contact->Name . "\n";
         }
 
     }

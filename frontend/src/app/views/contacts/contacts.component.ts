@@ -1,8 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {ContactService} from "../../services/contact.service";
-import {MatSort, MatTableDataSource,MatPaginator} from "@angular/material";
-import {Router} from "@angular/router";
-import {Contact} from "../../models/contact.model";
+import {ContactService} from '../../services/contact.service';
+import {MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
+import {Router} from '@angular/router';
 
 
 
@@ -14,30 +13,25 @@ import {Contact} from "../../models/contact.model";
 export class ContactsComponent implements OnInit {
 
   list: MatTableDataSource<any>;
-  searchKey ='';
-  c_all = false;
+  searchKey = '';
   displayedColumns: string[] = [
-   // 'check_actions',
     'name',
     'status',
     'email',
-    //'due',
-    'mobile_number',
-    'actions',
+    'payable',
 
   ];
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private contactService: ContactService, private router: Router) { }
+  constructor(private contactService: ContactService, private router:Router) { }
 
   ngOnInit() {
     this.refresh();
   }
 
   onContactCreate(){
-    this.router.navigateByUrl("contacts/edit");
 
   }
 
@@ -63,32 +57,6 @@ export class ContactsComponent implements OnInit {
   applyFilter() {
     this.list.filter = this.searchKey.trim().toLowerCase();
 
-  }
-  push(c: boolean, contact: Contact) {
-   /* if ( c && this.stores_to_delete.indexOf(store) === -1) {
-     // this.stores_to_delete.push(store);
-    }
-    if (!c && this.stores_to_delete.indexOf(store) !== -1) {
-     // this.stores_to_delete.splice( this.stores_to_delete.indexOf(store), 1);
-    }*/
-  }
-  onEdit(contact_id: string){
-   //localStorage.setItem("contact_id", contact_id);
-   //
-    this.contactService.getSingleContact(contact_id).then(
-        res => {
-          localStorage.setItem('contact', JSON.stringify(res));
-          this.router.navigateByUrl("contacts/edit");
-        },
-    );
-  }
-  onView(contact: Contact){
-   this.contactService.getSingleContact(contact.id).then(
-        res => {
-          localStorage.setItem('contact', JSON.stringify(res));
-          this.router.navigateByUrl("contacts/view");
-        },
-    );
   }
 
 }

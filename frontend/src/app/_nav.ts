@@ -47,6 +47,11 @@ export const navItems = [
         name: 'Invoices',
         url: '/business/invoices',
         icon: 'icon-notebook'
+      },
+      {
+        name: 'Collections',
+        url: '/business/collections',
+        icon: 'icon-drawer'
       }
     ]
   },

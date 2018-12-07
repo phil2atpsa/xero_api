@@ -7,8 +7,9 @@
  */
 
 namespace App\Http\Controllers\Api;
+ini_set('max_execution_time',-1);
 
-
+use App\Collections;
 use App\Http\Controllers\Controller;
 use App\Services\ContactService;
 use App\Services\InvoiceService;
@@ -82,7 +83,7 @@ class InvoiceController extends Controller
 
             if (!$request->hasFile('template_file'))
             {
-                throw \Exception("No file Uploaded");
+                throw new \Exception("No file Uploaded");
             }
 
 
@@ -97,15 +98,15 @@ class InvoiceController extends Controller
 
             $data = $worksheet->toArray();
             $length = count($data);
-          //  $invoices = ['Invoices'][];
+            //  $invoices = ['Invoices'][];
 
 
 
 
-            $chunk_size  = 39;
-           // $section = ceil($length/$data );
+            // $chunk_size  = 39;
+            // $section = ceil($length/$data );
 
-            for($i=19;$i< 29; $i++) {
+            for($i=1;$i< $length; $i++) {
                 $reference = $data[$i][2];
                 //fi4269187
 
@@ -116,59 +117,77 @@ class InvoiceController extends Controller
                 $policy_number = $data[$i][5]; //policy Number
                 $collection_amount = $data[$i][6]; // collection amount
 
-                $contact_service = new ContactService($this->xero->getApplication());
-                $contact = $contact_service->verifyContact($contact_name, $mobile);
+                //Change of process Upload onto a database.
+                $collections = Collections::where('tid',$invoice_number)
+                ->get()->toArray();
 
 
-                  //print_r($contact->Name."\n");
 
-
-                $existing = $this->xero->load(InvoiceService::MODEL)->where('InvoiceNumber="' . $invoice_number . '"')
-                    ->execute()->first();
-                if (!$existing) {
-
-                   $invoice = [
-                        'Contact' => $contact,
-                        'InvoiceNumber' => $invoice_number,
-                        'Date' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
-                        'DueDate' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
-                        'Reference' => $reference,
-                        'CurrencyCode' => 'ZAR',
-                        'Status' => 'AUTHORISED',
-                        'Type' => Invoice::INVOICE_TYPE_ACCREC,
-                        'SubTotal' => $collection_amount,
-                        'PolicyNumber' => $policy_number,
-                        'LineAmountTypes' => 'Exclusive',
-                        'TotalTax' => 0,
-                        'Total' => $collection_amount,
-                        'LineItems' => [[
-                            'Description' => 'Unpaid premium for ' . $policy_number,
-                            'Quantity' => 1,
-                            'UnitAmount' => $collection_amount,
-                            'TaxType' => 'OUTPUT',
-                            'TaxAmount' => 0,
-                            'LineAmount' => $collection_amount,
-                            'AccountCode' => 200
-                        ]]
-
-
-                    ];
-                    // array_push($invoices, $invoice);
-                    $this->invoice_service->saveBulk($invoice);
-
+                if(!$collections) {
+                    $collections = new Collections();
+                    $collections->tid = $invoice_number;
+                    $collections->reference = $reference;
+                    $collections->contact = $contact_name;
+                    $collections->mobile = $mobile;
+                    $collections->policy_number = $policy_number;
+                    $collections->collection_amount = $collection_amount;
+                    $collections->save();
                 }
 
+
+
+
+
+
+
+                /*  $contact_service = new ContactService($this->xero->getApplication());
+                  $contact = $contact_service->verifyContact($contact_name, $mobile);
+
+
+                    //print_r($contact->Name."\n");
+
+
+                  $existing = $this->xero->load(InvoiceService::MODEL)->where('InvoiceNumber="' . $invoice_number . '"')
+                      ->execute()->first();
+                  if (!$existing) {
+
+                     $invoice = [
+                          'Contact' => $contact,
+                          'InvoiceNumber' => $invoice_number,
+                          'Date' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
+                          'DueDate' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
+                          'Reference' => $reference,
+                          'CurrencyCode' => 'ZAR',
+                          'Status' => 'AUTHORISED',
+                          'Type' => Invoice::INVOICE_TYPE_ACCREC,
+                          'SubTotal' => $collection_amount,
+                          'PolicyNumber' => $policy_number,
+                          'LineAmountTypes' => 'Exclusive',
+                          'TotalTax' => 0,
+                          'Total' => $collection_amount,
+                          'LineItems' => [[
+                              'Description' => 'Unpaid premium for ' . $policy_number,
+                              'Quantity' => 1,
+                              'UnitAmount' => $collection_amount,
+                              'TaxType' => 'OUTPUT',
+                              'TaxAmount' => 0,
+                              'LineAmount' => $collection_amount,
+                              'AccountCode' => 200
+                          ]]
+
+
+                      ];
+                      // array_push($invoices, $invoice);
+                      $this->invoice_service->saveBulk($invoice);
+
+                  }*/
+
             }
-
-
-
-
-
             unlink(storage_path($file_name));
-
+            call_in_background("UploadInvoices");
             return response()->json(['success'=>1, 'message'=>'Invoices Uploaded Succesfully'], 200);
 
-       } catch (\Exception $ex){
+        } catch (\Exception $ex){
             return response()->json(['success'=>0, 'message'=>$ex->getMessage()], 200);
         }
 

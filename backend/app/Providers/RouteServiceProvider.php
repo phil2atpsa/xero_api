@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class RouteServiceProvider extends ServiceProvider
@@ -19,26 +19,25 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route model bindings, pattern filters, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function boot(Router $router)
+    public function boot()
     {
         //
 
-        parent::boot($router);
+        parent::boot();
     }
 
     /**
      * Define the routes for the application.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    public function map(Router $router)
+    public function map()
     {
-        $this->mapApiRoutes($router);
-        $this->mapWebRoutes($router);
+        $this->mapApiRoutes();
+
+        $this->mapWebRoutes();
 
         //
     }
@@ -48,16 +47,13 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes all receive session state, CSRF protection, etc.
      *
-     * @param  \Illuminate\Routing\Router  $router
      * @return void
      */
-    protected function mapWebRoutes(Router $router)
+    protected function mapWebRoutes()
     {
-        $router->group([
-            'namespace' => $this->namespace, 'middleware' => 'web',
-        ], function ($router) {
-            require base_path('routes/web.php');
-        });
+        Route::middleware('web')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/web.php'));
     }
 
     /**
@@ -65,17 +61,13 @@ class RouteServiceProvider extends ServiceProvider
      *
      * These routes are typically stateless.
      *
-     * @param Router $router
      * @return void
      */
-    protected function mapApiRoutes(Router $router)
+    protected function mapApiRoutes()
     {
-
-        $router->group([
-            'namespace' => $this->namespace, 'middleware' => 'api', 'prefix' => 'api/v1'
-        ], function ($router) {
-            require base_path('routes/api.php');
-        });
-
+        Route::prefix('api/v1')
+             ->middleware('api')
+             ->namespace($this->namespace)
+             ->group(base_path('routes/api.php'));
     }
 }

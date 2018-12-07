@@ -54,11 +54,11 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'host' => env('DB_HOST', 'localhost'),
+            'host' => php_uname('n') == 'LAPTOP-9EAM4J6I' ?  env('LOCAL_DB_HOST', 'localhost'):env('DB_HOST', 'localhost')  ,
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'database' =>  php_uname('n') == 'LAPTOP-9EAM4J6I' ? env('LOCAL_DB_DATABASE', 'forge'): env('DB_DATABASE', 'forge'),
+            'username' =>  php_uname('n') == 'LAPTOP-9EAM4J6I' ? env('LOCAL_DB_USERNAME', 'forge') : env('DB_USERNAME', 'forge'),
+            'password' =>  php_uname('n') == 'LAPTOP-9EAM4J6I' ? env('LOCAL_DB_PASSWORD', '') : env('DB_PASSWORD', 'forge'),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',

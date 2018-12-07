@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
-import {CommonModule} from "@angular/common";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {BusinessRoutingModule} from "./business-routing.module";
-import {NgSelectModule} from "@ng-select/ng-select";
-import {CollapseModule} from "ngx-bootstrap";
-import {SharedModule} from "../../shared/shared.module";
+import {CommonModule} from '@angular/common';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {BusinessRoutingModule} from './business-routing.module';
+import {NgSelectModule} from '@ng-select/ng-select';
+import {CollapseModule} from 'ngx-bootstrap';
+import {SharedModule} from '../../shared/shared.module';
 import {
   MatCheckboxModule,
   MatDialogModule,
@@ -14,10 +14,11 @@ import {
   MatProgressSpinnerModule,
   MatSortModule,
   MatTableModule
-} from "@angular/material";
+} from '@angular/material';
 
 
 import {BusinessComponent} from './business.component';
+import { CollectionsComponent } from './collections/collections.component';
 
 @NgModule({
   imports: [
@@ -39,10 +40,8 @@ import {BusinessComponent} from './business.component';
   ],
   declarations: [
    BusinessComponent,
+   CollectionsComponent,
 
-  ],
-  entryComponents: [
-   
   ]
 })
 export class BusinessModule { }

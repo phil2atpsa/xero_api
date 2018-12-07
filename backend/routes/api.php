@@ -38,4 +38,6 @@ Route::group(['middleware' => 'api'], function() {
     Route::get('account-classes', 'Api\AccountController@account_classes');
     Route::resource('bank-transfers', 'Api\BankTransferController', ['only' => ['index', 'show', 'store']]);
     Route::resource('bank-transactions', 'Api\BankTransactionsController', ['only' => ['index', 'show', 'store', 'update']]);
+    Route::get('system/invoices/uploading', 'Api\SystemController@check_invoices');
+    Route::get('collections', 'Api\CollectionsController@index');
 });
