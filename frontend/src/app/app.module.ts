@@ -24,8 +24,8 @@ import { LoginComponent } from './views/login/login.component';
 import { RegisterComponent } from './views/register/register.component';
 import { LogoutComponent } from './views/login/logout.component';
 import { ForgotPasswordComponent } from './views/forgot-password/forgot-password.component';
-import {ResetPasswordComponent} from './views/forgot-password/reset-password.component';
-import {MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableModule} from '@angular/material';
+import { ResetPasswordComponent} from './views/forgot-password/reset-password.component';
+import { MatProgressBarModule, MatInputModule, MatPaginatorModule, MatProgressSpinnerModule, MatSortModule, MatTableModule} from '@angular/material';
 
 
 
@@ -83,6 +83,7 @@ import {SharedModule} from './shared/shared.module';
     MatProgressSpinnerModule,
     MatSortModule,
     MatTableModule,
+    MatProgressBarModule,
     NgSelectModule,
     SharedModule
   ],

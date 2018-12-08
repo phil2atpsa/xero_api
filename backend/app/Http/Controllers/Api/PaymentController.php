@@ -15,6 +15,8 @@ use App\Services\XeroService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Validator;
+use App\Payments as Unallocated;
+use App\Collections;
 
 class PaymentController extends Controller
 {
@@ -123,5 +125,34 @@ class PaymentController extends Controller
          }
          
         
+    }
+
+    public function unallocated_payments()
+    {
+        return response()->json(Unallocated::all(), 200 );
+
+    }
+    public function allocate_payment(int $id)
+    {
+        $unallocated_payment = Unallocated::find($id);
+        try {
+            if (!Collections::where('policy_number', $unallocated_payment->policy_number)->exists())
+                throw  new \Exception('Invoice with reference number ' . $unallocated_payment->policy_number . '
+                does not exist in the system. Please make sure it is uploaded and try again');
+
+            return response()->json([
+                'success' => true,
+                'message' => config('api_response.xero.success_on_create'),
+                'PaymentID' => $this->payment_service->kp_payment($unallocated_payment->policy_number, $unallocated_payment->amount,
+                    $unallocated_payment->reference, $unallocated_payment->bank, $unallocated_payment->method)
+            ], 200);
+        } catch(\Exception $ex){
+
+            return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
+        }
+
+
+
+
     }
 }

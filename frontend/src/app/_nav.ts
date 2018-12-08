@@ -52,7 +52,12 @@ export const navItems = [
         name: 'Collections',
         url: '/business/collections',
         icon: 'icon-drawer'
-      }
+      },
+      {
+        name: 'Unallocated Payments',
+        url: '/accounting/unallocated-payments',
+        icon: 'icon-wallet'
+      },
     ]
   },
   {
@@ -60,12 +65,12 @@ export const navItems = [
     url: '/accounting',
     icon: 'icon-wallet',
     children: [
-    {
+       {
         name: 'Payments',
         url: '/accounting/payments',
         icon: 'icon-credit-card'
       },
-     {
+      {
         name: 'Accounts',
         url: '/accounting/accounts',
         icon: 'icon-bag'

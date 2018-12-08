@@ -13,12 +13,14 @@ import {
   MatPaginatorModule,
   MatProgressSpinnerModule,
   MatSortModule,
-  MatTableModule
+  MatTableModule,
+  MatProgressBarModule
 } from '@angular/material';
 
 
 import {BusinessComponent} from './business.component';
 import { CollectionsComponent } from './collections/collections.component';
+import { UnallocatedComponent } from './unallocated/unallocated.component';
 
 @NgModule({
   imports: [
@@ -37,10 +39,12 @@ import { CollectionsComponent } from './collections/collections.component';
     NgSelectModule,
     SharedModule,
     MatCheckboxModule,
+    MatProgressBarModule
   ],
   declarations: [
    BusinessComponent,
    CollectionsComponent,
+   UnallocatedComponent,
 
   ]
 })

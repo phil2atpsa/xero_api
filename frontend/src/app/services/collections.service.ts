@@ -14,4 +14,20 @@ export class CollectionsService {
   getCollections(): Observable<any[]> {
     return this.http.get<any[]>(this.api_url);
   }
+
+  sync_collection(collectionID: number):Promise<any>{
+    const promise:Promise<any> = new Promise<any>((resolve, reject) => {
+      this.http.put(`${this.api_url}/${collectionID}`,{})
+        .toPromise()
+        .then(
+          res => {
+            resolve(res);
+          },
+          error => {
+            reject(error);
+          }
+        );
+    });
+    return promise;
+  }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
 import {CollectionsService} from '../../../services/collections.service';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-collections',
@@ -19,8 +20,10 @@ export class CollectionsComponent implements OnInit {
     'mobile',
     'policy_number',
     'collection_amount',
+    'actions'
   ];
 
+  loading = false;
 
 
   @ViewChild(MatSort) sort: MatSort;
@@ -30,10 +33,19 @@ export class CollectionsComponent implements OnInit {
 
   ngOnInit() {
     this.refresh();
+    this.autorefresh();
+  }
+
+  autorefresh(){
+     const $this = this;
+    setTimeout(function(){
+       $this.refresh();
+    }, 300000)
   }
 
   refresh() {
-    this.list = new MatTableDataSource([]);
+    this.list = null;
+
     this.collectionsService.getCollections().subscribe(
        list => {
         const array = list.map(
@@ -55,6 +67,39 @@ export class CollectionsComponent implements OnInit {
     this.list.filter = this.searchKey.trim().toLowerCase();
   }
 
+  sync(invoiceID:number) {
+    swal({
+      title: 'Syncing!',
+      html: '<b>Please wait while syncing...</b>',
+      onOpen: () => {
+        swal.showLoading()
+        const d = swal;
+        this.collectionsService.sync_collection(invoiceID).then(
+          res => {
+            swal.getContent().textContent = res.message;
+            swal.hideLoading();
+            setTimeout(()=>{
+              swal.close();
+              this.refresh();
+            }, 3000)
+
+          },  rej => {
+            swal.getContent().textContent = rej.message;
+            swal.hideLoading();
+            setTimeout(()=>{
+              swal.close();
+
+            }, 3000)
+          }
+        );
+
+      },
+      onClose: () => {}
+    }).then( (result) => {
+      // if(result.dismiss = swal.DismissReason.close){}
+    })
+
+  }
 }
 
 

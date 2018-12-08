@@ -18,7 +18,7 @@ export class ContactsComponent implements OnInit {
     'name',
     'status',
     'email',
-    'payable',
+     'mobile_number',
 
   ];
 

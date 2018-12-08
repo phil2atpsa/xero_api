@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {BusinessComponent} from './business.component';
 import { CollectionsComponent } from './collections/collections.component';
-
+import { UnallocatedComponent } from './unallocated/unallocated.component';
 
 
 
@@ -34,6 +34,16 @@ const routes: Routes = [
           title: 'Collections'
         }
       },
+      {
+        path: 'unallocated-payments',
+        component: UnallocatedComponent,
+        data: {
+          title: 'Unallocated Payments'
+        }
+      },
+
+
+      //UnallocatedComponent
       
     ]
   },
