@@ -55,7 +55,7 @@ export const navItems = [
       },
       {
         name: 'Unallocated Payments',
-        url: '/accounting/unallocated-payments',
+        url: '/business/unallocated-payments',
         icon: 'icon-wallet'
       },
     ]

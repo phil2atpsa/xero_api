@@ -148,7 +148,7 @@ class PaymentController extends Controller
             ], 200);
         } catch(\Exception $ex){
 
-            return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 500);
+            return  response()->json(['success'=> 'false', 'message' => $ex->getMessage()], 200);
         }
 
 

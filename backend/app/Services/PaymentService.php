@@ -68,6 +68,8 @@ class PaymentService {
 
 
     /**
+     *
+     * The account we pay from is hard coded for now -- remember to change on live System
      * @param $policyNumber
      * @param $amount
      * @param $reference
