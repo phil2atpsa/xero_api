@@ -8,7 +8,7 @@
 
 return [
     'path' => [
-        'invoice' => "templates".DIRECTORY_SEPARATOR."invoice_imports.xls",
+        'invoice' => DIRECTORY_SEPARATOR."invoice_imports.xls",
 
     ]
 ];

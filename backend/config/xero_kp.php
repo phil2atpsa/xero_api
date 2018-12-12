@@ -8,10 +8,10 @@ return [
 
     'oauth' => [
         'callback'    => 'http://localhost/test',
-        // 'consumer_key'      => 'EPFSC1CZJEYTQQPCXH71QMN6PKBPXV',
-        'consumer_key' => 'IRJNHIYJHKLLBYLEUGS754UZCGP2OE',
+       // 'consumer_key'      => 'EPFSC1CZJEYTQQPCXH71QMN6PKBPXV',
+        'consumer_key' => 'AFORISYAFEQPEVPXPFADLBRIYHRST7',
         //'consumer_secret'   => 'DYFAXQBZWTVUUFVGEFTQOWKWH9P3VN',
-        'consumer_secret'   => 'Y8VTJRJJ49NKUYHGIKIZNPALRBHRBF',
+        'consumer_secret'   => 'UIK64ZUTINLOYFTXSBOHWRMCEF8LFP',
         'rsa_private_key'  => file_get_contents( 'atp.pem', true),
     ],
     'curl' => [

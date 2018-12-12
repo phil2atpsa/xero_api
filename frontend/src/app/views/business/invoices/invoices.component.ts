@@ -24,9 +24,9 @@ export class InvoicesComponent implements OnInit {
     'reference',
     'date',
     'duedate',
-    'status',
     'total',
-    'invoice_actions'
+    'status',
+   // 'invoice_actions'
   ];
 
   @ViewChild(MatSort) sort: MatSort;

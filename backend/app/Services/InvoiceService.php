@@ -100,6 +100,16 @@ class InvoiceService
     }
 
 
+    public function change_invoice(string $invoiceID, string $reference, \DateTime $date )
+    {
+       $this->invoice->setInvoiceID($invoiceID);
+       $this->invoice->setReference($reference);
+       $this->invoice->setDate($date);
+       $this->invoice->setDueDate($date);
+       $this->invoice->save();
+    }
+
+
    /**
      * @param array $post
      * @param string $id
@@ -157,7 +167,7 @@ class InvoiceService
                 $this->invoice->setInvoiceNumber($post['InvoiceNumber']);
 
 
-            if(isset($post['BrandingThemeID'])) { //Field to hold Policy Number
+            if(isset($post['BrandingThemeID'])) {
                 $this->invoice->setBrandingThemeID($post['BrandingThemeID']);
             }
 
@@ -176,6 +186,7 @@ class InvoiceService
                 $this->invoice->setLineAmountTypes($post['LineAmountTypes']);
 
             if(isset($post['LineItems'])) {
+
                 
             foreach($post['LineItems'] as $LineItems){
                 $lineItem = new LineItem($this->xero);
@@ -309,19 +320,26 @@ class InvoiceService
         $contact_service = new ContactService($this->xero);
 
         $contact = $contact_service->verifyContact($collection->contact, $collection->mobile);
+        
+       
 
-        $existing = $this->xero->load(InvoiceService::MODEL)->where('InvoiceNumber="' . $collection->tid . '"')
+        $existing = $this->xero->load(self::MODEL)->where('InvoiceNumber="' . $collection->tid . '"')
             ->execute()->first();
+      
 
-
-        if ($existing === null) {
+        if (!$existing) {
             try {
+
+                $invoice_date = \Carbon\Carbon::createFromFormat("Y-m-d H:i:s", $collection->created_at);
+                $due_date =  \Carbon\Carbon::createFromFormat("Y-m-d H:i:s", $invoice_date->addDays(14));
+                
+               
 
                 $invoice = [
                     'Contact' => $contact,
                     'InvoiceNumber' => $collection->tid,
-                    'Date' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
-                    'DueDate' => \Carbon\Carbon::createFromFormat("Y-m-d", \Carbon\Carbon::now()->format('Y-m-d')),
+                    'Date' =>  $invoice_date,
+                    'DueDate' => $due_date,
                     'Reference' => $collection->reference,
                     'CurrencyCode' => 'ZAR',
                     'Status' => 'AUTHORISED',
@@ -343,6 +361,9 @@ class InvoiceService
 
 
                 ];
+                
+                //print_r($invoice); exit;
+                
                 // array_push($invoices, $invoice);
                 $invoice_id =  $this->saveBulk($invoice);
                 $collection->synced = 1;
@@ -354,7 +375,7 @@ class InvoiceService
                 }
 
             } catch(\Exception $ex){
-                echo $ex->getMessage()."\n";
+               throw new \Exception($ex->getMessage());
             }
 
 

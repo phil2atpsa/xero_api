@@ -38,4 +38,41 @@ class CollectionsController extends Controller
 
 
     }
+
+    public function collection_change(Request $request, $id)
+    {
+        $collection = Collections::find($id);
+        $post = $request->all();
+        $reference = $post['reference'];
+        $date =  \Carbon\Carbon::createFromFormat("Y-m-d", $post['date']);
+
+
+        $collection->policy_number = $reference;
+        $collection->created_at = $post['date'];
+        $collection->save();
+        $invoice_service = new InvoiceService($this->xero->getApplication());
+
+        if($collection->synced)
+        {
+            $invoice = $this->xero->load(InvoiceService::MODEL)->where('Reference = "'.$reference.'"')
+                ->execute()->first();
+            $invoice_service->change_invoice($invoice->invoiceID, $reference, $date);
+        } else
+        {
+            $invoice_service->sync($collection);
+        }
+
+
+
+        return  response()->json(['success'=>1, 'message'=> config('api_response.xero.success_on_update')], 200);
+
+
+
+
+    }
+
+    public function show(int $id) :  \Illuminate\Http\JsonResponse
+    {
+        return response()->json(Collections::find($id), 200);
+    }
 }

@@ -129,7 +129,7 @@ class PaymentController extends Controller
 
     public function unallocated_payments()
     {
-        return response()->json(Unallocated::all(), 200 );
+        return response()->json(Unallocated::Where('processed',0)->get()->toArray(), 200 );
 
     }
     public function allocate_payment(int $id)
@@ -144,7 +144,7 @@ class PaymentController extends Controller
                 'success' => true,
                 'message' => config('api_response.xero.success_on_create'),
                 'PaymentID' => $this->payment_service->kp_payment($unallocated_payment->policy_number, $unallocated_payment->amount,
-                    $unallocated_payment->reference, $unallocated_payment->bank, $unallocated_payment->method)
+                    $unallocated_payment->reference, $unallocated_payment->bank, $unallocated_payment->method, $unallocated_payment)
             ], 200);
         } catch(\Exception $ex){
 

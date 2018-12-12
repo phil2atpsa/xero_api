@@ -16,6 +16,7 @@ use XeroPHP\Application\PrivateApplication;
 use XeroPHP\Models\Accounting\Payment;
 use Carbon\Carbon;
 use XeroPHP\Remote\Exception;
+use App\Payments  as Unallocated;
 
 
 class PaymentService {
@@ -76,12 +77,16 @@ class PaymentService {
      * @return \SimpleXMLElement
      * @throws \XeroPHP\Remote\Exception
      */
-    public function kp_payment($policyNumber, $amount,$reference,  $bank, $method) {
+    public function kp_payment($policyNumber, $amount,$reference,  $bank, $method, Unallocated $unallocated= null) {
 
         $invoice_service = new InvoiceService($this->xero);
+        
 
         if(Collections::Where('policy_number', $policyNumber)->exists()){
             $collection = Collections::Where('policy_number', $policyNumber)->first();
+            
+            
+            
 
 
             if(!$collection->synced){
@@ -93,12 +98,12 @@ class PaymentService {
             $this->payment->setDate($date);
 
             $account = $this->xero->load(AccountService::MODEL)
-                ->where('Code = "090"')
+                ->where('Name = "ATP VIRT SWEEP"')
                 ->execute()->first();
 
 
             $invoice = $this->xero->load(InvoiceService::MODEL)
-                ->where('Reference = "' . $policyNumber . '"')
+                ->where('Reference = "' . strtoupper($policyNumber) . '"')
                 ->where('Type ="ACCREC"')
                 ->execute()->first();
 
@@ -108,18 +113,24 @@ class PaymentService {
             $this->payment->setReference(strtoupper($bank)." - ".strtoupper($method)."  ".$reference);
 
             $this->payment = \simplexml_load_string($this->payment->save()->getResponseBody());
+            
+            if($unallocated !== null){
+                $unallocated->processed = 1;
+                $unallocated->save();
+            }
 
             return $this->payment->Payments->Payment->PaymentID;
 
         } else {
-
-            $payment = new Payments();
-            $payment->policy_number = $policyNumber;
-            $payment->amount = $amount;
-            $payment->reference = $reference;
-            $payment->bank = $bank;
-            $payment->method = $method;
-            $payment->save();
+            if(starts_with( $policyNumber, 'kp')){
+                $payment = new Payments();
+                $payment->policy_number = strtoupper($policyNumber);
+                $payment->amount = $amount;
+                $payment->reference = $reference;
+                $payment->bank = $bank;
+                $payment->method = $method;
+                $payment->save();
+            }
             $guid = new Guid();
             return [$guid->create()];
         }

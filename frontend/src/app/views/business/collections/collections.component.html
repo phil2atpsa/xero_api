@@ -75,11 +75,23 @@
                       </ng-container>
 
                         <ng-container matColumnDef="actions">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header></mat-header-cell>
+                          <mat-header-cell *matHeaderCellDef></mat-header-cell>
                           <mat-cell *matCellDef="let item">
-                            <button class="btn btn-dark  btn-block text-light size-2" (click)="sync(item.id)"> <i class="fa  fa-adjust"></i> Sync </button>
+                            <button class="btn btn-dark  text-light size-2" (click)="sync(item.id)"> <i class="fa  fa-adjust"></i> Sync </button>
+                          </mat-cell>
+
+
+
+                      </ng-container>
+                        <ng-container matColumnDef="edit_action">
+
+                          <mat-header-cell *matHeaderCellDef></mat-header-cell>
+                          <mat-cell *matCellDef="let item">
+                            <button class="btn btn-success   text-light size-2" (click)="edit(item.id)"> <i class="fa  fa-edit"></i> Edit </button>
 
                           </mat-cell>
+
+
                         </ng-container>
 
 

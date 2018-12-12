@@ -1,7 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {MatSort, MatTableDataSource, MatPaginator} from '@angular/material';
 import {CollectionsService} from '../../../services/collections.service';
+import {MatDialog, MatDialogConfig} from "@angular/material";
 import swal from 'sweetalert2';
+import {CollectionsEditFormComponent} from "./collections-edit-form/collections-edit-form.component";
 
 @Component({
   selector: 'app-collections',
@@ -20,16 +22,22 @@ export class CollectionsComponent implements OnInit {
     'mobile',
     'policy_number',
     'collection_amount',
-    'actions'
+    'actions',
+    'edit_action'
   ];
 
   loading = false;
+  matDialogConfig: MatDialogConfig = new MatDialogConfig();
 
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private collectionsService: CollectionsService) { }
+  constructor(private collectionsService: CollectionsService, private dialog: MatDialog) {
+    this.matDialogConfig.disableClose = true;
+    this.matDialogConfig.autoFocus = true;
+    this.matDialogConfig.width = '55%';
+  }
 
   ngOnInit() {
     this.refresh();
@@ -37,10 +45,10 @@ export class CollectionsComponent implements OnInit {
   }
 
   autorefresh(){
-     const $this = this;
-    setTimeout(function(){
-       $this.refresh();
-    }, 300000)
+    setInterval(
+      () => {this.refresh()},
+      300000
+    );
   }
 
   refresh() {
@@ -99,6 +107,18 @@ export class CollectionsComponent implements OnInit {
       // if(result.dismiss = swal.DismissReason.close){}
     })
 
+  }
+
+  edit(id: number){
+    this.collectionsService.getSingle(id)
+      .then(res=> {
+        localStorage.setItem('collection', JSON.stringify(res));
+        this.dialog.open(CollectionsEditFormComponent)
+          .afterClosed()
+          .subscribe(res => {
+            this.refresh();
+          });
+      });
   }
 }
 

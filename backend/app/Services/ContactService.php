@@ -63,6 +63,8 @@ class ContactService
         $contact = $this->xero->load(self::MODEL)
             ->where('Name = "'.$name.'"')->execute()
             ->first();
+        
+        
         if($contact) {
            return $contact;
         } else {

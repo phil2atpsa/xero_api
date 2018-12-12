@@ -184,7 +184,7 @@ class InvoiceController extends Controller
 
             }
             unlink(storage_path($file_name));
-            call_in_background("UploadInvoices");
+            //call_in_background("UploadInvoices");
             return response()->json(['success'=>1, 'message'=>'Invoices Uploaded Succesfully'], 200);
 
         } catch (\Exception $ex){

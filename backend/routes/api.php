@@ -39,7 +39,8 @@ Route::group(['middleware' => 'api'], function() {
     Route::resource('bank-transfers', 'Api\BankTransferController', ['only' => ['index', 'show', 'store']]);
     Route::resource('bank-transactions', 'Api\BankTransactionsController', ['only' => ['index', 'show', 'store', 'update']]);
     Route::get('system/invoices/uploading', 'Api\SystemController@check_invoices');
-    Route::resource('collections','Api\CollectionsController', ['only' => ['index', 'update']]);
+    Route::resource('collections','Api\CollectionsController', ['only' => ['index', 'update','show']]);
+    Route::put('collection-change/{id}','Api\CollectionsController@collection_change');
     Route::get('unallocated-payments','Api\PaymentController@unallocated_payments');
     Route::put('unallocated-payments/{id}','Api\PaymentController@allocate_payment');
 });

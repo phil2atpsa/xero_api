@@ -21,6 +21,8 @@ import {
 import {BusinessComponent} from './business.component';
 import { CollectionsComponent } from './collections/collections.component';
 import { UnallocatedComponent } from './unallocated/unallocated.component';
+import { CollectionsEditFormComponent } from './collections/collections-edit-form/collections-edit-form.component';
+import {PaymentFormComponent} from "../accounting/payments/payment-form/payment-form.component";
 
 @NgModule({
   imports: [
@@ -45,7 +47,11 @@ import { UnallocatedComponent } from './unallocated/unallocated.component';
    BusinessComponent,
    CollectionsComponent,
    UnallocatedComponent,
+   CollectionsEditFormComponent,
 
+  ],
+  entryComponents: [
+    CollectionsEditFormComponent
   ]
 })
 export class BusinessModule { }

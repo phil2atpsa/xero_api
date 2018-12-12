@@ -52,8 +52,6 @@ export class FormInvoiceComponent implements OnInit {
          invoice_number:['', Validators.required],
          ref_number:['', Validators.required],
          date:['', Validators.required]
-         
-
     });
     
       

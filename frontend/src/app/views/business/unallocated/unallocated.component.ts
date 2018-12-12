@@ -29,7 +29,7 @@ export class UnallocatedComponent implements OnInit {
 
   ngOnInit() {
     this.refresh();
-    setTimeout(
+    setInterval(
       () => {
         this.refresh();
       }, 180000
